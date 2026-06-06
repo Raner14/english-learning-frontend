@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import LoginPage from './pages/auth/LoginPage';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 
 function createView(title) {
@@ -78,8 +80,18 @@ function App() {
       </div>
 
       <BrowserRouter>
-        <MainLayout userRole={currentRole}>
-          <Routes>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            element={
+              <ProtectedRoute>
+                <MainLayout userRole={currentRole}>
+                  <Outlet />
+                </MainLayout>
+              </ProtectedRoute>
+            }
+          >
+            <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/" element={<DashboardView />} />
             <Route path="/users" element={<UsersView />} />
             <Route path="/lessons" element={<LessonsView />} />
@@ -89,8 +101,8 @@ function App() {
             <Route path="/teachers" element={<TeachersView />} />
             <Route path="/match-teacher" element={<MatchTeacherView />} />
             <Route path="/reviews" element={<ReviewsView />} />
-          </Routes>
-        </MainLayout>
+          </Route>
+        </Routes>
       </BrowserRouter>
     </>
   );
