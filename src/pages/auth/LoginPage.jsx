@@ -16,8 +16,8 @@ function LoginPage() {
 
     try {
       const response = await loginRequest(email, password);
-      const token = response?.token;
-      const userData = response?.user;
+      const userData = response.data; 
+      const token = userData?.token;
 
       if (!token || !userData) {
         throw new Error('Login failed.');
