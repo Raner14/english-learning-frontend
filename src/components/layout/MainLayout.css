@@ -5,7 +5,6 @@
 
 .main-layout__content {
   margin-top: var(--navbar-height);
-  margin-left: var(--sidebar-width);
   height: calc(100vh - var(--navbar-height));
   display: flex;
   flex-direction: column;

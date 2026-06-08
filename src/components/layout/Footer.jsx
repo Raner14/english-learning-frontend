@@ -3,7 +3,9 @@ import './Footer.css';
 function Footer() {
   return (
     <footer className="footer">
-      <p className="footer__text">© 2026 English Learning System. All rights reserved.</p>
+      <p className="footer__text">
+        <span className="footer__brand">Lingua</span> © 2026 — Learn English Smarter
+      </p>
     </footer>
   );
 }

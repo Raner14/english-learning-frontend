@@ -1,13 +1,18 @@
 .footer {
   margin-top: auto;
-  padding: 18px 24px;
-  border-top: 1px solid #e2e8f0;
-  background: #f8fafc;
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
 .footer__text {
   margin: 0;
-  color: #64748b;
-  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
   text-align: center;
+}
+
+.footer__brand {
+  font-weight: 700;
+  color: var(--color-primary);
 }

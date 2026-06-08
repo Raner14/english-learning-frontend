@@ -1,18 +1,18 @@
 const ROLE_NAVIGATION = {
   admin: [
-    { label: 'Dashboard', path: '/' },
+    { label: 'Dashboard', path: '/dashboard' },
     { label: 'Manage Users', path: '/users' },
     { label: 'Manage Lessons', path: '/lessons' },
     { label: 'Settings', path: '/settings' },
   ],
   teacher: [
-    { label: 'Dashboard', path: '/' },
+    { label: 'Dashboard', path: '/dashboard' },
     { label: 'My Students', path: '/students' },
     { label: 'My Reviews', path: '/reviews' },
     { label: 'Settings', path: '/settings' },
   ],
   student: [
-    { label: 'Dashboard', path: '/' },
+    { label: 'Dashboard', path: '/dashboard' },
     { label: 'Lessons', path: '/lessons' },
     { label: 'My Progress', path: '/progress' },
     { label: 'Teachers', path: '/teachers' },

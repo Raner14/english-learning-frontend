@@ -1,9 +1,15 @@
 .lesson-card {
   border-radius: 20px;
   overflow: hidden;
-  background: #ffffff;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface);
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.1);
+  border: 1px solid var(--color-border);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.lesson-card:hover {
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.18);
+  transform: translateY(-2px);
 }
 
 .lesson-card__image {
@@ -22,20 +28,20 @@
   margin-bottom: 12px;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: var(--color-primary-light);
+  color: var(--color-primary-darker);
   font-size: 0.85rem;
   font-weight: 700;
 }
 
 .lesson-card__title {
   margin: 0 0 10px;
-  color: #0f172a;
+  color: var(--color-text-main);
   font-size: 1.25rem;
 }
 
 .lesson-card__description {
   margin: 0;
-  color: #475569;
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }

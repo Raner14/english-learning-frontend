@@ -1,9 +1,36 @@
 :root {
+  /* Layout */
   --navbar-height: 72px;
-  --sidebar-width: 250px;
-  --color-bg-page: #f8fafc;
+
+  /* Surface colors */
+  --color-bg-page: #f0f9ff;
   --color-surface: #ffffff;
-  --color-border: #e2e8f0;
+  --color-border: #bae6fd;
+
+  /* Primary brand: sky / teal blue */
+  --color-primary: #0ea5e9;
+  --color-primary-dark: #0284c7;
+  --color-primary-darker: #0369a1;
+  --color-primary-light: #bae6fd;
+  --color-primary-bg: #f0f9ff;
+
+  /* Text */
+  --color-text-main: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+
+  /* Status */
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  --color-success: #16a34a;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #d97706;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -13,6 +40,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--color-bg-page);
+  color: var(--color-text-main);
 }
 
 code {

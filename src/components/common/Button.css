@@ -9,8 +9,12 @@
 }
 
 .button--primary {
-  background: #2563eb;
+  background: var(--color-primary);
   color: #ffffff;
+}
+
+.button--primary:hover:not(.button--disabled) {
+  background: var(--color-primary-dark);
 }
 
 .button--danger {
