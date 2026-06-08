@@ -1,12 +1,12 @@
 .main-layout {
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--color-bg-page);
 }
 
 .main-layout__content {
-  margin-top: 72px;
-  margin-left: 250px;
-  height: calc(100vh - 72px);
+  margin-top: var(--navbar-height);
+  margin-left: var(--sidebar-width);
+  height: calc(100vh - var(--navbar-height));
   display: flex;
   flex-direction: column;
   overflow: hidden;
