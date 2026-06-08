@@ -1,22 +1,24 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import LoginForm from '../../components/forms/LoginForm';
 import { useAuth } from '../../context/AuthContext';
 import { login as loginRequest } from '../../services/authService';
 
 function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [serverError, setServerError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const fromPath = location.state?.from?.pathname;
+  const redirectPath = fromPath && fromPath !== '/login' ? fromPath : '/dashboard';
 
   const handleSubmit = async ({ email, password }) => {
     setServerError('');
     setIsSubmitting(true);
 
     try {
-      const response = await loginRequest(email, password);
-      const userData = response.data; 
+      const userData = await loginRequest(email, password);
       const token = userData?.token;
 
       if (!token || !userData) {
@@ -24,7 +26,7 @@ function LoginPage() {
       }
 
       login(token, userData);
-      navigate('/dashboard');
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       setServerError(error?.response?.data?.message || error.message || 'Login failed. Please try again.');
     } finally {

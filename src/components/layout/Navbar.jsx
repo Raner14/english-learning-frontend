@@ -1,13 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 function Navbar() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const userRole = user?.role || 'student';
   const roleLabel = userRole.charAt(0).toUpperCase() + userRole.slice(1);
 
   const handleLogout = () => {
-    console.log('User logged out');
+    logout();
+    navigate('/login', { replace: true });
   };
 
   return (

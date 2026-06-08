@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { clearAuthToken, setAuthToken, setUnauthorizedHandler } from '../services/api';
 
 const AUTH_STORAGE_KEY = 'authUser';
 
@@ -22,29 +23,37 @@ function getStoredUser() {
 function AuthProvider({ children }) {
   const [user, setUser] = useState(() => getStoredUser());
 
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-      return;
-    }
-
-    localStorage.removeItem(AUTH_STORAGE_KEY);
-  }, [user]);
-
-  const login = (token, userData) => {
+  const login = useCallback((token, userData) => {
     const nextUser = {
       ...userData,
       token,
     };
 
     setUser(nextUser);
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextUser));
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+      setAuthToken(user.token);
+      return;
+    }
+
     localStorage.removeItem(AUTH_STORAGE_KEY);
-  };
+    clearAuthToken();
+  }, [user]);
+
+  useEffect(() => {
+    setUnauthorizedHandler(logout);
+
+    return () => {
+      setUnauthorizedHandler(null);
+    };
+  }, [logout]);
 
   const value = {
     user,
