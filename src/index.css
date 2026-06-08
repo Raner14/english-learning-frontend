@@ -27,6 +27,18 @@
   --color-warning: #d97706;
 }
 
+[data-theme="dark"] {
+  --color-bg-page: #0f172a;
+  --color-surface: #1e293b;
+  --color-border: #334155;
+  --color-primary-bg: #0f2d47;
+  --color-text-main: #f8fafc;
+  --color-text-secondary: #e2e8f0;
+  --color-text-muted: #94a3b8;
+  --color-danger-bg: #2d1515;
+  --color-success-bg: #0d2417;
+}
+
 *,
 *::before,
 *::after {

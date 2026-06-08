@@ -1,9 +1,14 @@
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import PlaceholderView from './components/common/PlaceholderView';
 import LoginPage from './pages/auth/LoginPage';
+import SettingsPage from './pages/settings/SettingsPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import { APP_ROUTES } from './config/appRoutes';
+
+const REAL_PAGES = {
+  '/settings': <SettingsPage />,
+};
 
 function App() {
   return (
@@ -24,7 +29,9 @@ function App() {
               <Route
                 key={route.path}
                 path={route.path}
-                element={<PlaceholderView title={route.title} />}
+                element={
+                  REAL_PAGES[route.path] ?? <PlaceholderView title={route.title} />
+                }
               />
             ))}
           </Route>

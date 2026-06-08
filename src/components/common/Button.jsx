@@ -2,6 +2,7 @@ import './Button.css';
 
 function Button({
   onClick,
+  type = 'button',
   variant = 'primary',
   isLoading = false,
   disabled = false,
@@ -22,7 +23,7 @@ function Button({
 
   return (
     <button
-      type="button"
+      type={type}
       onClick={onClick}
       disabled={isDisabled}
       aria-busy={isLoading}
