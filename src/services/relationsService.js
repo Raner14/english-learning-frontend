@@ -25,4 +25,17 @@ async function reviewTeacher(rating, feedback) {
   return response.data.data;
 }
 
-export { requestTeacher, getMyStudents, getPendingRequests, updateRelationStatus, reviewTeacher };
+async function getAllRelations(status) {
+  const params = status ? { status } : {};
+  const response = await api.get('/api/relations', { params });
+  return response.data.data;
+}
+
+export {
+  requestTeacher,
+  getMyStudents,
+  getPendingRequests,
+  updateRelationStatus,
+  reviewTeacher,
+  getAllRelations,
+};
