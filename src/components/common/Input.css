@@ -1,0 +1,34 @@
+.input-wrapper {
+  display: block;
+  width: 100%;
+}
+
+.input-label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  outline: none;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.input-field--error {
+  border-color: #dc2626;
+}
+
+.input-error {
+  margin: 0.45rem 0 0;
+  color: #dc2626;
+  font-size: 0.85rem;
+}
