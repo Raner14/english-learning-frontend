@@ -1,6 +1,9 @@
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
-function Navbar({ userRole }) {
+function Navbar() {
+  const { user } = useAuth();
+  const userRole = user?.role || 'student';
   const roleLabel = userRole.charAt(0).toUpperCase() + userRole.slice(1);
 
   const handleLogout = () => {

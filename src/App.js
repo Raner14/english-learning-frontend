@@ -85,7 +85,7 @@ function App() {
           <Route
             element={
               <ProtectedRoute>
-                <MainLayout userRole={currentRole}>
+                <MainLayout>
                   <Outlet />
                 </MainLayout>
               </ProtectedRoute>

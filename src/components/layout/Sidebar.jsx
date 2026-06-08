@@ -1,7 +1,11 @@
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import './Sidebar.css';
 
-function Sidebar({ userRole }) {
+function Sidebar() {
+  const { user } = useAuth();
+  const userRole = user?.role || 'student';
+
   function getLinksByRole(role) {
     if (role === 'admin') {
       return [
