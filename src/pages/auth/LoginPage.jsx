@@ -28,7 +28,9 @@ function LoginPage() {
       login(token, userData);
       navigate(redirectPath, { replace: true });
     } catch (error) {
-      setServerError(error?.response?.data?.message || error.message || 'Login failed. Please try again.');
+      setServerError(
+        error?.response?.data?.error?.message || error.message || 'Login failed. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }

@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { clearAuthToken, setAuthToken, setUnauthorizedHandler } from '../services/api';
+import { clearAuthSession, setAuthSession, setUnauthorizedHandler } from '../services/api';
 
 const AUTH_STORAGE_KEY = 'authUser';
 
@@ -20,14 +20,28 @@ function getStoredUser() {
   }
 }
 
+function normalizeUser(userData, token) {
+  if (!userData) {
+    return null;
+  }
+
+  const resolvedToken = token || userData.token || null;
+  const resolvedRole = userData.role || userData.userRole || null;
+  const resolvedId = userData.id || userData.userId || userData.userID || null;
+
+  return {
+    ...userData,
+    id: resolvedId,
+    role: resolvedRole,
+    token: resolvedToken,
+  };
+}
+
 function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => getStoredUser());
+  const [user, setUser] = useState(() => normalizeUser(getStoredUser()));
 
   const login = useCallback((token, userData) => {
-    const nextUser = {
-      ...userData,
-      token,
-    };
+    const nextUser = normalizeUser(userData, token);
 
     setUser(nextUser);
   }, []);
@@ -39,12 +53,16 @@ function AuthProvider({ children }) {
   useEffect(() => {
     if (user) {
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-      setAuthToken(user.token);
+      setAuthSession({
+        token: user.token,
+        userId: user.id,
+        userRole: user.role,
+      });
       return;
     }
 
     localStorage.removeItem(AUTH_STORAGE_KEY);
-    clearAuthToken();
+    clearAuthSession();
   }, [user]);
 
   useEffect(() => {

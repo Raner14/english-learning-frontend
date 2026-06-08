@@ -6,7 +6,11 @@ async function login(email, password) {
     password,
   });
 
-  return response.data;
+  if (!response?.data?.success) {
+    throw new Error(response?.data?.error?.message || 'Login failed.');
+  }
+
+  return response.data.data;
 }
 
 export { login };

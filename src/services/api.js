@@ -4,15 +4,24 @@ const api = axios.create({
 	baseURL: 'http://localhost:3000',
 });
 
-let authToken = null;
+let authSession = null;
 let unauthorizedHandler = null;
 
-function setAuthToken(token) {
-	authToken = token || null;
+function setAuthSession(session) {
+	if (!session) {
+		authSession = null;
+		return;
+	}
+
+	authSession = {
+		token: session.token || null,
+		userId: session.userId || null,
+		userRole: session.userRole || null,
+	};
 }
 
-function clearAuthToken() {
-	authToken = null;
+function clearAuthSession() {
+	authSession = null;
 }
 
 function setUnauthorizedHandler(handler) {
@@ -20,10 +29,12 @@ function setUnauthorizedHandler(handler) {
 }
 
 api.interceptors.request.use((config) => {
-	if (authToken) {
+	if (authSession) {
 		config.headers = {
 			...config.headers,
-			Authorization: `Bearer ${authToken}`,
+			...(authSession.userRole ? { 'x-user-role': authSession.userRole } : {}),
+			...(authSession.userId ? { 'x-user-id': String(authSession.userId) } : {}),
+			...(authSession.token ? { Authorization: `Bearer ${authSession.token}` } : {}),
 		};
 	}
 
@@ -31,15 +42,15 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-	(response) => response,
-	(error) => {
-		if (error?.response?.status === 401 && unauthorizedHandler) {
-			unauthorizedHandler();
-		}
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401 && unauthorizedHandler) {
+      unauthorizedHandler();
+    }
 
-		return Promise.reject(error);
-	}
+    return Promise.reject(error);
+  }
 );
 
 export default api;
-export { setAuthToken, clearAuthToken, setUnauthorizedHandler };
+export { setAuthSession, clearAuthSession, setUnauthorizedHandler };
