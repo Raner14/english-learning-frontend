@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getAllLessons, createLesson, updateLesson, deleteLesson } from '../../services/lessonService';
+import { getAllGrammarRules } from '../../services/grammarService';
 import PageLoader from '../../components/common/PageLoader';
+import { useToast } from '../../context/ToastContext';
 import './LessonsAdminPage.css';
 
 const LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
@@ -32,11 +35,17 @@ function lessonToForm(lesson) {
 }
 
 function LessonsAdminPage() {
+  const toast = useToast();
   const [lessons, setLessons] = useState([]);
+  const [grammarRules, setGrammarRules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [confirmId, setConfirmId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+
+  // Search / filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [levelFilter, setLevelFilter] = useState('All');
 
   // Form state
   const [showForm, setShowForm] = useState(false);
@@ -46,8 +55,14 @@ function LessonsAdminPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    getAllLessons()
-      .then(setLessons)
+    Promise.all([
+      getAllLessons(),
+      getAllGrammarRules().catch(() => []),
+    ])
+      .then(([lessonsData, rulesData]) => {
+        setLessons(lessonsData);
+        setGrammarRules(rulesData);
+      })
       .catch((err) => setError(err?.response?.data?.error?.message || 'Failed to load lessons.'))
       .finally(() => setLoading(false));
   }, []);
@@ -91,15 +106,16 @@ function LessonsAdminPage() {
     try {
       if (editLesson) {
         await updateLesson(editLesson.lessonId, payload);
-        // PUT only returns { lessonId }, so reconstruct the updated row locally
         setLessons((prev) =>
           prev.map((l) =>
             l.lessonId === editLesson.lessonId ? { ...l, ...payload } : l
           )
         );
+        toast('Lesson updated.');
       } else {
         const created = await createLesson(payload);
         setLessons((prev) => [...prev, created]);
+        toast('Lesson created.');
       }
       closeForm();
     } catch (err) {
@@ -115,6 +131,7 @@ function LessonsAdminPage() {
     try {
       await deleteLesson(lessonId);
       setLessons((prev) => prev.filter((l) => l.lessonId !== lessonId));
+      toast('Lesson deleted.');
     } catch (err) {
       setError(err?.response?.data?.error?.message || 'Failed to delete lesson.');
     } finally {
@@ -123,6 +140,16 @@ function LessonsAdminPage() {
   }
 
   if (loading) return <PageLoader text="Loading lessons..." />;
+
+  const q = searchQuery.trim().toLowerCase();
+  const filteredLessons = lessons.filter((l) => {
+    const matchesLevel = levelFilter === 'All' || l.level === levelFilter;
+    const matchesSearch =
+      !q ||
+      l.title.toLowerCase().includes(q) ||
+      (l.grammarRuleId || '').toLowerCase().includes(q);
+    return matchesLevel && matchesSearch;
+  });
 
   return (
     <div className="lessons-admin">
@@ -187,15 +214,31 @@ function LessonsAdminPage() {
             </div>
 
             <div className="lessons-admin__field">
-              <label className="lessons-admin__label">Grammar Rule ID</label>
-              <input
-                type="text"
-                className="lessons-admin__input"
-                value={formData.grammarRuleId}
-                onChange={(e) => handleFieldChange('grammarRuleId', e.target.value)}
-                placeholder="e.g. present_simple"
-                required
-              />
+              <label className="lessons-admin__label">Grammar Rule</label>
+              {grammarRules.length > 0 ? (
+                <select
+                  className="lessons-admin__input lessons-admin__select"
+                  value={formData.grammarRuleId}
+                  onChange={(e) => handleFieldChange('grammarRuleId', e.target.value)}
+                  required
+                >
+                  <option value="">— select a rule —</option>
+                  {grammarRules.map((rule) => (
+                    <option key={rule.id} value={rule.id}>
+                      {rule.category} · {rule.id}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  className="lessons-admin__input"
+                  value={formData.grammarRuleId}
+                  onChange={(e) => handleFieldChange('grammarRuleId', e.target.value)}
+                  placeholder="e.g. present_simple"
+                  required
+                />
+              )}
             </div>
 
             <div className="lessons-admin__field">
@@ -245,6 +288,36 @@ function LessonsAdminPage() {
         </form>
       )}
 
+      {/* Search + level filter bar */}
+      {!showForm && (
+        <div className="lessons-admin-filter-bar">
+          <input
+            type="search"
+            className="lessons-admin-filter-bar__search"
+            placeholder="Search by title or grammar rule…"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="lessons-admin-filter-bar__levels" role="group" aria-label="Filter by level">
+            {['All', ...LEVELS].map((lvl) => (
+              <button
+                key={lvl}
+                type="button"
+                className={`lessons-admin-filter-bar__level-btn${levelFilter === lvl ? ' lessons-admin-filter-bar__level-btn--active' : ''}`}
+                onClick={() => setLevelFilter(lvl)}
+              >
+                {lvl}
+              </button>
+            ))}
+          </div>
+          {(searchQuery || levelFilter !== 'All') && (
+            <span className="lessons-admin-filter-bar__count">
+              {filteredLessons.length} of {lessons.length}
+            </span>
+          )}
+        </div>
+      )}
+
       <div className="lessons-admin-table-wrap">
         <table className="lessons-admin-table">
           <thead>
@@ -258,7 +331,14 @@ function LessonsAdminPage() {
             </tr>
           </thead>
           <tbody>
-            {lessons.map((lesson) => (
+            {filteredLessons.length === 0 && (
+              <tr>
+                <td colSpan={6} className="lessons-admin-table__empty">
+                  No lessons match your search.
+                </td>
+              </tr>
+            )}
+            {filteredLessons.map((lesson) => (
               <tr
                 key={lesson.lessonId}
                 className={deletingId === lesson.lessonId ? 'lessons-admin-table__row--deleting' : ''}
@@ -298,6 +378,12 @@ function LessonsAdminPage() {
                     </span>
                   ) : (
                     <span className="lessons-admin-table__action-group">
+                      <Link
+                        to={`/lessons/${lesson.lessonId}/vocab`}
+                        className="lessons-admin-table__btn lessons-admin-table__btn--vocab"
+                      >
+                        Vocab
+                      </Link>
                       <button
                         type="button"
                         className="lessons-admin-table__btn lessons-admin-table__btn--edit"

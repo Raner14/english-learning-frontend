@@ -4,10 +4,40 @@
 
 .users-page__header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  justify-content: space-between;
   gap: 14px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+}
+
+.users-page__header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.users-page__add-btn {
+  padding: 9px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.users-page__add-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.users-page__add-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .users-page__title {
@@ -22,13 +52,185 @@
   color: var(--color-text-muted);
 }
 
-.users-page__error {
+.users-page__error,
+.users-page__save-error {
   margin: 0 0 20px;
   padding: 12px 16px;
   border-radius: 10px;
   background: var(--color-danger-bg);
   color: var(--color-danger);
   font-size: 0.9rem;
+}
+
+/* ── Search / filter bar ──────────────────────────── */
+.users-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.users-filter-bar__search {
+  flex: 1;
+  min-width: 200px;
+  padding: 9px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.users-filter-bar__search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.users-filter-bar__roles {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.users-filter-bar__role-btn {
+  padding: 7px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.users-filter-bar__role-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.users-filter-bar__role-btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.users-filter-bar__result-count {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── Empty row ────────────────────────────────────── */
+.users-table__empty {
+  text-align: center;
+  padding: 32px 16px !important;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ── Create form panel ────────────────────────────── */
+.users-create-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.users-create-form__title {
+  margin: 0 0 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.users-create-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+}
+
+.users-create-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.users-create-form__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.users-create-form__input,
+.users-create-form__select {
+  padding: 9px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.users-create-form__input:focus,
+.users-create-form__select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.users-create-form__error {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.users-create-form__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.users-create-form__btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: #fff;
+  transition: background 0.15s;
+}
+
+.users-create-form__btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.users-create-form__btn--ghost {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-border);
+}
+
+.users-create-form__btn--ghost:hover:not(:disabled) {
+  background: var(--color-primary-bg);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.users-create-form__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* ── Role badge ───────────────────────────────────── */
@@ -97,6 +299,10 @@
 
 .users-table tbody tr.users-table__row--deleting {
   opacity: 0.5;
+}
+
+.users-table tbody tr.users-table__row--editing {
+  background: var(--color-primary-bg);
 }
 
 .users-table tbody td {
@@ -176,4 +382,71 @@
 .users-table__btn:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+/* ── Edit / Save buttons ──────────────────────────── */
+.users-table__btn-group {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.users-table__btn--edit {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+.users-table__btn--edit:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.users-table__btn--save {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.users-table__btn--save:hover:not(:disabled) {
+  background: var(--color-success);
+  color: #fff;
+}
+
+/* ── Inline edit inputs ───────────────────────────── */
+.users-table__edit-name {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.users-table__edit-input {
+  width: 90px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.users-table__edit-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.users-table__edit-select {
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.users-table__edit-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
 }

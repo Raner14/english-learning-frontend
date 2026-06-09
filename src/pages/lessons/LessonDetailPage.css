@@ -468,3 +468,176 @@
 .lesson-result__btn:hover {
   background: #0284c7;
 }
+
+/* ── Warm-up quiz ──────────────────────────────────────────────────────────── */
+
+.lesson-warmup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  height: 100%;
+}
+
+.lesson-warmup__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lesson-warmup__label {
+  display: inline-block;
+  background: var(--color-primary, #0ea5e9);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.lesson-warmup__progress {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #94a3b8);
+  font-weight: 600;
+}
+
+.lesson-warmup__track {
+  height: 4px;
+  background: var(--color-border, #e2e8f0);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.lesson-warmup__track-fill {
+  height: 100%;
+  background: var(--color-primary, #0ea5e9);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.lesson-warmup__card {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lesson-warmup__instruction {
+  font-size: 0.88rem;
+  color: var(--color-text-muted, #64748b);
+  margin: 0;
+  font-style: italic;
+}
+
+.lesson-warmup__content {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.lesson-warmup__options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.lesson-warmup__option {
+  background: transparent;
+  border: 2px solid var(--color-border, #e2e8f0);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  color: var(--color-text, #1e293b);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  font-weight: 500;
+}
+
+.lesson-warmup__option:hover {
+  border-color: var(--color-primary, #0ea5e9);
+  background: #f0f9ff;
+}
+
+.lesson-warmup__option--selected {
+  background: var(--color-primary, #0ea5e9);
+  border-color: var(--color-primary, #0ea5e9);
+  color: #fff;
+}
+
+.lesson-warmup__option--selected:hover {
+  background: #0284c7;
+  border-color: #0284c7;
+}
+
+.lesson-warmup__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.lesson-warmup__next-btn {
+  background: var(--color-primary, #0ea5e9);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lesson-warmup__next-btn:hover:not(:disabled) {
+  background: #0284c7;
+}
+
+.lesson-warmup__next-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Vocabulary warm-up colour variants (amber) */
+
+.lesson-warmup__label--vocab {
+  background: #f59e0b;
+}
+
+.lesson-warmup__track-fill--vocab {
+  background: #f59e0b;
+}
+
+.lesson-warmup__option--selected-vocab {
+  background: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.lesson-warmup__option--selected-vocab:hover {
+  background: #d97706;
+  border-color: #d97706;
+}
+
+.lesson-warmup__next-btn--vocab {
+  background: #f59e0b;
+}
+
+.lesson-warmup__next-btn--vocab:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.lesson-detail__start-btn--vocab {
+  background: #f59e0b;
+}
+
+.lesson-detail__start-btn--vocab:hover:not(:disabled) {
+  background: #d97706;
+}

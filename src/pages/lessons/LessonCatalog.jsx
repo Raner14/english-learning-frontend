@@ -10,6 +10,7 @@ function LessonCatalog() {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
   const [activeTab, setActiveTab] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -22,14 +23,40 @@ function LessonCatalog() {
       .finally(() => setLoading(false));
   }, []);
 
-  const visibleLessons =
+  const q = searchQuery.trim().toLowerCase();
+  const levelFiltered =
     activeTab === 'All' ? lessons : lessons.filter((l) => l.level === activeTab);
+  const visibleLessons = q
+    ? levelFiltered.filter(
+        (l) =>
+          l.title.toLowerCase().includes(q) ||
+          (l.scene || '').toLowerCase().includes(q) ||
+          (l.grammarRuleName || '').toLowerCase().includes(q)
+      )
+    : levelFiltered;
 
   if (loading) return <PageLoader text="Loading lessons..." />;
+
+  const isFiltered = q || activeTab !== 'All';
 
   return (
     <div className="lessons-page">
       <h1 className="lessons-page__title">Lesson Catalog</h1>
+
+      <div className="lessons-page__search-bar">
+        <input
+          type="search"
+          className="lessons-page__search-input"
+          placeholder="Search by title, scene or grammar rule…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        {isFiltered && (
+          <span className="lessons-page__search-count">
+            {visibleLessons.length} of {lessons.length}
+          </span>
+        )}
+      </div>
 
       <div className="lessons-page__tabs" role="tablist" aria-label="Filter by level">
         {LEVELS.map((level) => (
@@ -49,7 +76,11 @@ function LessonCatalog() {
       {error && <p className="lessons-page__error">{error}</p>}
 
       {visibleLessons.length === 0 && !error && (
-        <p className="lessons-page__empty">No lessons available for this level.</p>
+        <p className="lessons-page__empty">
+          {isFiltered
+            ? 'No lessons match your search.'
+            : 'No lessons available for this level.'}
+        </p>
       )}
 
       <div className="lessons-page__grid">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getLesson, getLessonGrammar, getLessonVocab } from '../../services/lessonService';
+import { getLesson, getLessonGrammar, getLessonVocab, getLessonVocabWarmup, getLessonGrammarWarmup } from '../../services/lessonService';
 import { startConversation, sendMessage, endConversation } from '../../services/conversationService';
 import PageLoader from '../../components/common/PageLoader';
 import './LessonDetailPage.css';
@@ -96,8 +96,21 @@ function LessonDetailPage() {
   const [result, setResult] = useState(null); // { aiScore, aiFeedback }
   const [chatError, setChatError] = useState('');
 
-  // 'idle' | 'active' | 'ended'
+  // 'idle' | 'vocab-warmup' | 'warmup' | 'active' | 'ended'
   const [phase, setPhase] = useState('idle');
+
+  // Vocab warm-up state
+  const [vocabExercises, setVocabExercises] = useState([]);
+  const [vocabIndex, setVocabIndex] = useState(0);
+  const [vocabSelected, setVocabSelected] = useState(null);
+  const [vocabStarting, setVocabStarting] = useState(false);
+
+  // Grammar warm-up state
+  const [warmupExercises, setWarmupExercises] = useState([]);
+  const [warmupIndex, setWarmupIndex] = useState(0);
+  const [warmupSelected, setWarmupSelected] = useState(null);
+  const [warmupLoading, setWarmupLoading] = useState(false);
+  const [warmupStarting, setWarmupStarting] = useState(false);
 
   const messagesEndRef = useRef(null);
 
@@ -121,6 +134,74 @@ function LessonDetailPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  function buildVocabExercises(items) {
+    return items.map((item) => {
+      const distractors = items
+        .filter((i) => i.vocabularyId !== item.vocabularyId)
+        .map((i) => i.word)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+      return { ...item, options: [item.word, ...distractors].sort(() => Math.random() - 0.5) };
+    });
+  }
+
+  async function handleStartLesson() {
+    setChatError('');
+    setWarmupLoading(true);
+    try {
+      const [vocabData, grammarExercises] = await Promise.all([
+        getLessonVocabWarmup(lessonId).catch(() => ({ completeSentence: [], matching: [] })),
+        getLessonGrammarWarmup(lessonId).catch(() => []),
+      ]);
+
+      if (grammarExercises?.length > 0) {
+        setWarmupExercises(grammarExercises);
+        setWarmupIndex(0);
+        setWarmupSelected(null);
+      }
+
+      const sentences = vocabData?.completeSentence || [];
+      if (sentences.length > 0) {
+        setVocabExercises(buildVocabExercises(sentences));
+        setVocabIndex(0);
+        setVocabSelected(null);
+        setPhase('vocab-warmup');
+      } else if (grammarExercises?.length > 0) {
+        setPhase('warmup');
+      } else {
+        await handleStart();
+      }
+    } finally {
+      setWarmupLoading(false);
+    }
+  }
+
+  function handleVocabNext() {
+    setVocabIndex((i) => i + 1);
+    setVocabSelected(null);
+  }
+
+  async function handleVocabFinish() {
+    if (warmupExercises.length > 0) {
+      setPhase('warmup');
+    } else {
+      setVocabStarting(true);
+      await handleStart();
+      setVocabStarting(false);
+    }
+  }
+
+  function handleWarmupNext() {
+    setWarmupIndex((i) => i + 1);
+    setWarmupSelected(null);
+  }
+
+  async function handleWarmupFinish() {
+    setWarmupStarting(true);
+    await handleStart();
+    setWarmupStarting(false);
+  }
 
   async function handleStart() {
     setChatError('');
@@ -230,8 +311,132 @@ function LessonDetailPage() {
             </div>
           )}
 
+          {/* Vocabulary warm-up */}
+          {phase === 'vocab-warmup' && (() => {
+            const ex = vocabExercises[vocabIndex];
+            const isLast = vocabIndex === vocabExercises.length - 1;
+            return (
+              <div className="lesson-warmup lesson-warmup--vocab">
+                <div className="lesson-warmup__header">
+                  <span className="lesson-warmup__label lesson-warmup__label--vocab">Vocabulary Warm-Up</span>
+                  <span className="lesson-warmup__progress">
+                    {vocabIndex + 1} / {vocabExercises.length}
+                  </span>
+                </div>
+                <div className="lesson-warmup__track">
+                  <div
+                    className="lesson-warmup__track-fill lesson-warmup__track-fill--vocab"
+                    style={{ width: `${((vocabIndex + 1) / vocabExercises.length) * 100}%` }}
+                  />
+                </div>
+                <div className="lesson-warmup__card">
+                  <p className="lesson-warmup__instruction">Choose the correct word to complete the sentence</p>
+                  <p className="lesson-warmup__content">{ex?.completeSentence}</p>
+                  <div className="lesson-warmup__options">
+                    {ex?.options?.map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        className={`lesson-warmup__option${vocabSelected === opt ? ' lesson-warmup__option--selected lesson-warmup__option--selected-vocab' : ''}`}
+                        onClick={() => setVocabSelected(opt)}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {chatError && <p className="lesson-detail__chat-error">{chatError}</p>}
+                <div className="lesson-warmup__footer">
+                  {isLast ? (
+                    <button
+                      type="button"
+                      className="lesson-detail__start-btn lesson-detail__start-btn--vocab"
+                      onClick={handleVocabFinish}
+                      disabled={!vocabSelected || vocabStarting}
+                    >
+                      {vocabStarting
+                        ? 'Starting…'
+                        : warmupExercises.length > 0
+                        ? 'Grammar Warm-Up →'
+                        : 'Start Conversation →'}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="lesson-warmup__next-btn lesson-warmup__next-btn--vocab"
+                      onClick={handleVocabNext}
+                      disabled={!vocabSelected}
+                    >
+                      Next →
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Grammar warm-up quiz */}
+          {phase === 'warmup' && (() => {
+            const ex = warmupExercises[warmupIndex];
+            const isLast = warmupIndex === warmupExercises.length - 1;
+            return (
+              <div className="lesson-warmup">
+                <div className="lesson-warmup__header">
+                  <span className="lesson-warmup__label">Warm-Up</span>
+                  <span className="lesson-warmup__progress">
+                    {warmupIndex + 1} / {warmupExercises.length}
+                  </span>
+                </div>
+                <div className="lesson-warmup__track">
+                  <div
+                    className="lesson-warmup__track-fill"
+                    style={{ width: `${((warmupIndex + 1) / warmupExercises.length) * 100}%` }}
+                  />
+                </div>
+                <div className="lesson-warmup__card">
+                  <p className="lesson-warmup__instruction">{ex?.instruction}</p>
+                  <p className="lesson-warmup__content">{ex?.content}</p>
+                  <div className="lesson-warmup__options">
+                    {ex?.options?.map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        className={`lesson-warmup__option${warmupSelected === opt ? ' lesson-warmup__option--selected' : ''}`}
+                        onClick={() => setWarmupSelected(opt)}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {chatError && <p className="lesson-detail__chat-error">{chatError}</p>}
+                <div className="lesson-warmup__footer">
+                  {isLast ? (
+                    <button
+                      type="button"
+                      className="lesson-detail__start-btn"
+                      onClick={handleWarmupFinish}
+                      disabled={!warmupSelected || warmupStarting}
+                    >
+                      {warmupStarting ? 'Starting…' : 'Start Conversation →'}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="lesson-warmup__next-btn"
+                      onClick={handleWarmupNext}
+                      disabled={!warmupSelected}
+                    >
+                      Next →
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Chat window (idle or active) */}
-          {phase !== 'ended' && (
+          {phase !== 'ended' && phase !== 'warmup' && phase !== 'vocab-warmup' && (
             <>
               <div className="lesson-detail__chat-header">
                 <span className="lesson-detail__ai-label">
@@ -264,8 +469,13 @@ function LessonDetailPage() {
               {chatError && <p className="lesson-detail__chat-error">{chatError}</p>}
 
               {phase === 'idle' && (
-                <button type="button" className="lesson-detail__start-btn" onClick={handleStart}>
-                  Start Conversation
+                <button
+                  type="button"
+                  className="lesson-detail__start-btn"
+                  onClick={handleStartLesson}
+                  disabled={warmupLoading}
+                >
+                  {warmupLoading ? 'Loading…' : 'Start Lesson'}
                 </button>
               )}
 

@@ -6,6 +6,7 @@ import { getMyTeacherProfile, updateTeacher } from '../../services/teacherServic
 import { deleteUser } from '../../services/userService';
 import { logout as logoutRequest } from '../../services/authService';
 import PageLoader from '../../components/common/PageLoader';
+import { useToast } from '../../context/ToastContext';
 import Card from '../../components/Card';
 import Button from '../../components/common/Button';
 import './SettingsPage.css';
@@ -67,6 +68,7 @@ function toggleItem(arr, item) {
 function SettingsPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
   const isTeacher = user?.role === 'teacher';
 
   const [pageLoading, setPageLoading] = useState(true);
@@ -76,14 +78,12 @@ function SettingsPage() {
   const [form, setForm] = useState({ displayName: '', email: '', theme: 'light' });
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState('');
 
   // Teacher profile
   const [teacherProfile, setTeacherProfile] = useState(null);
   const [teacherForm, setTeacherForm] = useState(BLANK_TEACHER_FORM);
   const [teacherSaving, setTeacherSaving] = useState(false);
-  const [teacherSaveSuccess, setTeacherSaveSuccess] = useState(false);
   const [teacherSaveError, setTeacherSaveError] = useState('');
 
   // Delete account
@@ -115,7 +115,6 @@ function SettingsPage() {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: '' }));
-    setSaveSuccess(false);
     setSaveError('');
   }
 
@@ -140,7 +139,6 @@ function SettingsPage() {
     if (!validate()) return;
 
     setSaving(true);
-    setSaveSuccess(false);
     setSaveError('');
 
     try {
@@ -150,7 +148,7 @@ function SettingsPage() {
         theme: form.theme,
       });
       applyTheme(form.theme);
-      setSaveSuccess(true);
+      toast('Settings saved.');
     } catch (err) {
       setSaveError(err?.response?.data?.error?.message || 'Failed to save settings. Please try again.');
     } finally {
@@ -160,14 +158,12 @@ function SettingsPage() {
 
   function handleTeacherFieldChange(field, value) {
     setTeacherForm((prev) => ({ ...prev, [field]: value }));
-    setTeacherSaveSuccess(false);
     setTeacherSaveError('');
   }
 
   async function handleTeacherSave(e) {
     e.preventDefault();
     setTeacherSaving(true);
-    setTeacherSaveSuccess(false);
     setTeacherSaveError('');
 
     try {
@@ -182,7 +178,7 @@ function SettingsPage() {
         specialties: teacherForm.specialties,
         teachingLevels: teacherForm.teachingLevels,
       });
-      setTeacherSaveSuccess(true);
+      toast('Teacher profile saved.');
     } catch (err) {
       setTeacherSaveError(err?.response?.data?.error?.message || 'Failed to save teacher profile.');
     } finally {
@@ -283,9 +279,6 @@ function SettingsPage() {
             </div>
           </div>
 
-          {saveSuccess && (
-            <p className="settings-card__success" role="status">Settings saved successfully!</p>
-          )}
           {saveError && (
             <p className="settings-card__error" role="alert">{saveError}</p>
           )}
@@ -433,9 +426,6 @@ function SettingsPage() {
               </div>
             </div>
 
-            {teacherSaveSuccess && (
-              <p className="settings-card__success" role="status">Teacher profile saved!</p>
-            )}
             {teacherSaveError && (
               <p className="settings-card__error" role="alert">{teacherSaveError}</p>
             )}

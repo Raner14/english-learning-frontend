@@ -5,6 +5,7 @@ const ROLE_NAVIGATION = {
     { label: 'Manage Lessons', path: '/lessons' },
     { label: 'Grammar Rules', path: '/grammar' },
     { label: 'Relations', path: '/relations' },
+    { label: 'Exercises', path: '/exercises' },
     { label: 'Settings', path: '/settings' },
   ],
   teacher: [

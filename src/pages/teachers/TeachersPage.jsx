@@ -11,6 +11,7 @@ function TeachersPage() {
   const [error, setError] = useState('');
 
   // Filter state
+  const [nameQuery, setNameQuery] = useState('');
   const [availableOnly, setAvailableOnly] = useState(false);
   const [maxPrice, setMaxPrice] = useState('');
 
@@ -26,7 +27,13 @@ function TeachersPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const nq = nameQuery.trim().toLowerCase();
   const visibleTeachers = teachers
+    .filter((t) => !nq || (
+      `${t.firstName} ${t.lastName}`.toLowerCase().includes(nq) ||
+      (t.specialties || []).some((s) => s.toLowerCase().includes(nq)) ||
+      (t.bio || '').toLowerCase().includes(nq)
+    ))
     .filter((t) => !availableOnly || t.available)
     .filter((t) => maxPrice === '' || t.pricePerWeek <= Number(maxPrice));
 
@@ -43,11 +50,12 @@ function TeachersPage() {
   }
 
   function handleClearFilters() {
+    setNameQuery('');
     setAvailableOnly(false);
     setMaxPrice('');
   }
 
-  const filtersActive = availableOnly || maxPrice !== '';
+  const filtersActive = nq || availableOnly || maxPrice !== '';
 
   if (loading) return <PageLoader text="Loading teachers..." />;
 
@@ -56,6 +64,14 @@ function TeachersPage() {
       <h1 className="teachers-page__title">Find a Teacher</h1>
 
       <div className="teachers-page__filters">
+        <input
+          type="search"
+          className="teachers-filter__search"
+          placeholder="Search by name, specialty or bio…"
+          value={nameQuery}
+          onChange={(e) => setNameQuery(e.target.value)}
+        />
+
         <label className="teachers-filter__toggle">
           <input
             type="checkbox"

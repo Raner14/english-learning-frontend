@@ -35,6 +35,21 @@ async function getLessonGrammarWarmup(lessonId) {
   return response.data.data;
 }
 
+async function createLessonVocabItem(lessonId, data) {
+  const response = await api.post(`/api/lessons/${lessonId}/vocab`, data);
+  return response.data.data;
+}
+
+async function updateLessonVocabItem(lessonId, vocabId, data) {
+  const response = await api.put(`/api/lessons/${lessonId}/vocab/${vocabId}`, data);
+  return response.data.data;
+}
+
+async function deleteLessonVocabItem(lessonId, vocabId) {
+  const response = await api.delete(`/api/lessons/${lessonId}/vocab/${vocabId}`);
+  return response.data.data;
+}
+
 async function createLesson(lessonData) {
   const response = await api.post('/api/lessons', lessonData);
   return response.data.data;
@@ -58,6 +73,9 @@ export {
   getLessonGrammar,
   getLessonVocabWarmup,
   getLessonGrammarWarmup,
+  createLessonVocabItem,
+  updateLessonVocabItem,
+  deleteLessonVocabItem,
   createLesson,
   updateLesson,
   deleteLesson,

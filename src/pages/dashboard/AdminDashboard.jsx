@@ -56,6 +56,9 @@ function AdminDashboard() {
           <Link to="/relations" className="dashboard__quick-link">
             Manage Relations
           </Link>
+          <Link to="/exercises" className="dashboard__quick-link">
+            Warm-Up Exercises
+          </Link>
         </div>
       </Card>
     </div>

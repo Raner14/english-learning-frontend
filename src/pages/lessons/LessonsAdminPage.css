@@ -341,6 +341,17 @@
   gap: 6px;
 }
 
+.lessons-admin-table__btn--vocab {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  text-decoration: none;
+}
+
+.lessons-admin-table__btn--vocab:hover {
+  background: var(--color-success);
+  color: #fff;
+}
+
 .lessons-admin-table__btn--edit {
   background: var(--color-primary-bg);
   color: var(--color-primary-darker, #0284c7);
@@ -349,4 +360,74 @@
 .lessons-admin-table__btn--edit:hover:not(:disabled) {
   background: var(--color-primary);
   color: #fff;
+}
+
+/* ── Search / filter bar ──────────────────────────── */
+.lessons-admin-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.lessons-admin-filter-bar__search {
+  flex: 1;
+  min-width: 200px;
+  padding: 9px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.lessons-admin-filter-bar__search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.lessons-admin-filter-bar__levels {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.lessons-admin-filter-bar__level-btn {
+  padding: 7px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.lessons-admin-filter-bar__level-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.lessons-admin-filter-bar__level-btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.lessons-admin-filter-bar__count {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── Empty row ────────────────────────────────────── */
+.lessons-admin-table__empty {
+  text-align: center;
+  padding: 32px 16px !important;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
 }

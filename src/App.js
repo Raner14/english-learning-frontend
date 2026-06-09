@@ -1,8 +1,10 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { ToastProvider } from './context/ToastContext';
 import PlaceholderView from './components/common/PlaceholderView';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import LessonDetailPage from './pages/lessons/LessonDetailPage';
+import LessonVocabPage from './pages/lessons/LessonVocabPage';
 import AssessmentPage from './pages/assessment/AssessmentPage';
 import ReviewTeacherPage from './pages/reviews/ReviewTeacherPage';
 import GrammarPage from './pages/grammar/GrammarPage';
@@ -20,6 +22,7 @@ import StudentsPage from './pages/students/StudentsPage';
 import ReviewsPage from './pages/reviews/ReviewsPage';
 import UsersPage from './pages/users/UsersPage';
 import RelationsPage from './pages/relations/RelationsPage';
+import WarmUpPage from './pages/exercises/WarmUpPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import { APP_ROUTES } from './config/appRoutes';
@@ -40,11 +43,12 @@ const REAL_PAGES = {
   '/grammar': <GrammarPage />,
   '/conversations': <ConversationsPage />,
   '/relations': <RelationsPage />,
+  '/exercises': <WarmUpPage />,
 };
 
 function App() {
   return (
-    <>
+    <ToastProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
@@ -69,13 +73,14 @@ function App() {
             ))}
             <Route path="/teachers/:teacherId" element={<TeacherProfilePage />} />
             <Route path="/lessons/:lessonId" element={<LessonDetailPage />} />
+            <Route path="/lessons/:lessonId/vocab" element={<LessonVocabPage />} />
             <Route path="/students/:studentId" element={<StudentProgressPage />} />
             <Route path="/conversations/:conversationId" element={<ConversationDetailPage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Routes>
       </BrowserRouter>
-    </>
+    </ToastProvider>
   );
 }
 
