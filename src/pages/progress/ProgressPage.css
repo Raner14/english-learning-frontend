@@ -1,0 +1,83 @@
+.progress-page {
+  max-width: 900px;
+}
+
+.progress-page__title {
+  margin: 0 0 28px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+/* ── Stat cards ───────────────────────────────────── */
+.progress-page__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+/* ── Sections ─────────────────────────────────────── */
+.progress-page__section {
+  margin-bottom: 32px;
+}
+
+.progress-page__section-title {
+  margin: 0 0 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+/* ── Skills feedback ──────────────────────────────── */
+.progress-page__skills-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Footer note ──────────────────────────────────── */
+.progress-page__last-activity {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Error ────────────────────────────────────────── */
+.progress-page__error {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.92rem;
+}
+
+/* ── Score pills (rendered inside DataTable cells) ── */
+.score-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.score-pill--high {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.score-pill--mid {
+  background: #fefce8;
+  color: var(--color-warning);
+}
+
+.score-pill--low {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.score-pill--none {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}

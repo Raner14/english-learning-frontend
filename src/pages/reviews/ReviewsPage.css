@@ -1,0 +1,123 @@
+.reviews-page {
+  max-width: 680px;
+}
+
+.reviews-page__title {
+  margin: 0 0 24px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.reviews-page__error {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.9rem;
+}
+
+/* ── Summary banner ───────────────────────────────── */
+.reviews-page__summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.reviews-page__avg-number {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: var(--color-text-main);
+  line-height: 1;
+  min-width: 56px;
+}
+
+.reviews-page__avg-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reviews-page__review-count {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Stars ─────────────────────────────────────────── */
+.review-stars {
+  display: flex;
+  gap: 1px;
+}
+
+.review-star {
+  font-size: 1.1rem;
+  color: var(--color-border);
+}
+
+.review-star--filled {
+  color: #f59e0b;
+}
+
+/* ── Empty ─────────────────────────────────────────── */
+.reviews-page__empty {
+  padding: 40px 24px;
+  border: 1.5px dashed var(--color-border);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.reviews-page__empty-text {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.reviews-page__empty-hint {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Review cards ──────────────────────────────────── */
+.reviews-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-card__score {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.review-card__feedback {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+}

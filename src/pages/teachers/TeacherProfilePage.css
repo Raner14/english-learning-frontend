@@ -1,0 +1,186 @@
+.teacher-profile {
+  max-width: 640px;
+}
+
+/* ── Back button ──────────────────────────────────── */
+.teacher-profile__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.teacher-profile__back:hover {
+  color: var(--color-primary-dark);
+}
+
+/* ── Header ───────────────────────────────────────── */
+.teacher-profile__header {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.teacher-profile__title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.teacher-profile__name {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.teacher-profile__availability {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-success);
+}
+
+.teacher-profile__availability--unavailable {
+  color: var(--color-text-muted);
+}
+
+/* ── Stars ────────────────────────────────────────── */
+.profile-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.profile-star {
+  font-size: 1.2rem;
+  color: var(--color-border);
+}
+
+.profile-star--filled {
+  color: #f59e0b;
+}
+
+.profile-stars__label {
+  margin-left: 8px;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Sections ─────────────────────────────────────── */
+.teacher-profile__section {
+  margin-bottom: 24px;
+}
+
+.teacher-profile__section-title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Bio ──────────────────────────────────────────── */
+.teacher-profile__bio {
+  margin: 0;
+  font-size: 0.96rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+}
+
+/* ── Info rows ────────────────────────────────────── */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-info__row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.profile-info__label {
+  min-width: 100px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.profile-info__value {
+  font-size: 0.95rem;
+  color: var(--color-text-main);
+}
+
+/* ── Tag rows ─────────────────────────────────────── */
+.teacher-profile__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.teacher-profile__tag {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.teacher-profile__tag--specialty {
+  background: var(--color-primary-bg);
+  color: var(--color-primary-darker);
+}
+
+.teacher-profile__tag--level {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+/* ── Request CTA ──────────────────────────────────── */
+.teacher-profile__cta {
+  margin-top: 8px;
+}
+
+.teacher-profile__request-btn {
+  padding: 12px 32px;
+  border-radius: 12px;
+  border: none;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.teacher-profile__request-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.teacher-profile__request-btn--done {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  cursor: default;
+}
+
+.teacher-profile__error {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.92rem;
+}

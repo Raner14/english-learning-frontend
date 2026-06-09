@@ -15,9 +15,14 @@ async function getNextLesson() {
   return response.data.data;
 }
 
+async function getProgressChart() {
+  const response = await api.get('/api/progress/chart');
+  return response.data.data;
+}
+
 async function getStudentProgress(studentId) {
   const response = await api.get(`/api/progress/${studentId}`);
   return response.data.data;
 }
 
-export { getProgressStats, getProgressSkills, getNextLesson, getStudentProgress };
+export { getProgressStats, getProgressSkills, getProgressChart, getNextLesson, getStudentProgress };

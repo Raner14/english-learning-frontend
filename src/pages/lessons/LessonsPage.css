@@ -1,0 +1,66 @@
+.lessons-page {
+  max-width: 960px;
+}
+
+.lessons-page__title {
+  margin: 0 0 28px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+/* ── Level tabs ───────────────────────────────────── */
+.lessons-page__tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.lessons-page__tab {
+  padding: 9px 22px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-radius: 6px 6px 0 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.lessons-page__tab:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.lessons-page__tab--active {
+  color: var(--color-primary-dark);
+  border-bottom-color: var(--color-primary);
+}
+
+/* ── Card grid ────────────────────────────────────── */
+.lessons-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ── Empty / error states ─────────────────────────── */
+.lessons-page__empty {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.lessons-page__error {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.92rem;
+  margin-bottom: 20px;
+}

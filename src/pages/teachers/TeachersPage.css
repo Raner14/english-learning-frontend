@@ -1,0 +1,133 @@
+.teachers-page {
+  max-width: 960px;
+}
+
+.teachers-page__title {
+  margin: 0 0 24px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+/* ── Filter bar ───────────────────────────────────── */
+.teachers-page__filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+
+.teachers-filter__toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  cursor: pointer;
+  user-select: none;
+}
+
+.teachers-filter__toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.teachers-filter__price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.teachers-filter__label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.teachers-filter__price-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-bg-page);
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+
+.teachers-filter__currency,
+.teachers-filter__unit {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+.teachers-filter__input {
+  width: 72px;
+  border: none;
+  background: transparent;
+  font-size: 0.92rem;
+  color: var(--color-text-main);
+  outline: none;
+  text-align: right;
+}
+
+.teachers-filter__input::-webkit-inner-spin-button,
+.teachers-filter__input::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.teachers-filter__clear {
+  margin-left: auto;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.teachers-filter__clear:hover {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+/* ── Results count ────────────────────────────────── */
+.teachers-page__count {
+  margin: 0 0 16px;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Card grid ────────────────────────────────────── */
+.teachers-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* ── Empty / error ────────────────────────────────── */
+.teachers-page__empty {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.teachers-page__error {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.92rem;
+  margin-bottom: 16px;
+}

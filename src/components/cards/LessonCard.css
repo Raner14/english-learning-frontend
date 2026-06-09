@@ -1,47 +1,144 @@
 .lesson-card {
-  border-radius: 20px;
-  overflow: hidden;
+  border-radius: 16px;
   background: var(--color-surface);
-  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.1);
   border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.07);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .lesson-card:hover {
-  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.18);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.15);
   transform: translateY(-2px);
 }
 
-.lesson-card__image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  display: block;
+.lesson-card--locked {
+  opacity: 0.65;
 }
 
-.lesson-card__body {
-  padding: 20px;
+.lesson-card--locked:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.07);
 }
 
-.lesson-card__badge {
-  display: inline-block;
-  margin-bottom: 12px;
-  padding: 0.35rem 0.75rem;
+/* ── Header row ───────────────────────────────────── */
+.lesson-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lesson-card__level {
+  padding: 3px 12px;
   border-radius: 999px;
-  background: var(--color-primary-light);
-  color: var(--color-primary-darker);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
+.lesson-card__level--beginner {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.lesson-card__level--intermediate {
+  background: #fefce8;
+  color: var(--color-warning);
+}
+
+.lesson-card__level--advanced {
+  background: var(--color-primary-bg);
+  color: var(--color-primary-darker);
+}
+
+.lesson-card__completed-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.lesson-card__lock-icon {
+  font-size: 1rem;
+  cursor: default;
+}
+
+/* ── Title & scene ────────────────────────────────── */
 .lesson-card__title {
-  margin: 0 0 10px;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--color-text-main);
-  font-size: 1.25rem;
+  line-height: 1.3;
 }
 
-.lesson-card__description {
+.lesson-card__scene {
   margin: 0;
+  font-size: 0.87rem;
   color: var(--color-text-secondary);
-  line-height: 1.6;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Meta info row ────────────────────────────────── */
+.lesson-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-border);
+}
+
+.lesson-card__meta-item {
+  font-size: 0.83rem;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lesson-card__meta-label {
+  font-weight: 700;
+  color: var(--color-text-muted);
+  min-width: 54px;
+}
+
+/* ── Action button ────────────────────────────────── */
+.lesson-card__button {
+  margin-top: 4px;
+  padding: 10px 0;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: #ffffff;
+  transition: background 0.15s;
+}
+
+.lesson-card__button:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.lesson-card__button--locked {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.lesson-card__button:disabled {
+  cursor: not-allowed;
 }
