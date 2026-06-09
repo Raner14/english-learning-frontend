@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getMyStudents } from '../../services/relationsService';
 import { useAuth } from '../../context/AuthContext';
 import DataTable from '../../components/tables/DataTable';
@@ -26,6 +27,19 @@ const COLUMNS = [
     key: 'lastActivityDate',
     label: 'Last Active',
     render: (v) => formatDate(v),
+  },
+  {
+    key: 'actions',
+    label: '',
+    render: (_, row) => (
+      <Link
+        to={`/students/${row.studentId}`}
+        state={{ name: `${row.firstName} ${row.lastName}` }}
+        className="students-page__progress-link"
+      >
+        View Progress
+      </Link>
+    ),
   },
 ];
 

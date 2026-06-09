@@ -27,14 +27,15 @@ function AssessmentPage() {
 
   const messagesEndRef = useRef(null);
 
+  // Must be before any conditional return — React Rules of Hooks
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   // Student-only
   if (user?.role !== 'student') {
     return <PlaceholderView title="Assessment" />;
   }
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
 
   async function handleStart() {
     setError('');

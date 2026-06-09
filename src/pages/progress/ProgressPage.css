@@ -81,3 +81,20 @@
   color: var(--color-text-muted);
   font-weight: 400;
 }
+
+/* ── View link button in history table ────────────── */
+.progress-link-btn {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-subtle, #e0f2fe);
+  text-decoration: none;
+}
+
+.progress-link-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
+}

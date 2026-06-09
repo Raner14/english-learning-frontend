@@ -1,0 +1,246 @@
+.conv-detail {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.conv-detail__back {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1.25rem;
+  display: inline-block;
+}
+
+.conv-detail__back:hover {
+  text-decoration: underline;
+}
+
+.conv-detail__load-error {
+  color: var(--color-danger);
+}
+
+.conv-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.conv-detail__status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.conv-detail__status--done {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.conv-detail__status--pending {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+[data-theme="dark"] .conv-detail__status--pending {
+  background: #2d1f0a;
+  color: #fbbf24;
+}
+
+.conv-detail__ai-score {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+/* Messages window */
+.conv-detail__messages {
+  background: var(--color-bg-subtle);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  min-height: 80px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.conv-detail__empty {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.conv-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 78%;
+}
+
+.conv-msg--student {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.conv-msg--ai {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.conv-msg__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.conv-msg__bubble {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.conv-msg--student .conv-msg__bubble {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.conv-msg--ai .conv-msg__bubble {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: 4px;
+}
+
+/* Review section */
+.conv-detail__review-section {
+  border-top: 1.5px solid var(--color-border);
+  padding-top: 1.5rem;
+}
+
+.conv-detail__existing-review {
+  background: var(--color-success-bg);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.conv-detail__review-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.conv-detail__review-score {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.conv-detail__review-comment {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.conv-detail__save-success {
+  margin: 0.5rem 0 0;
+  color: var(--color-success);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* Review form */
+.conv-detail__review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.conv-detail__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.conv-detail__label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.conv-detail__score-input {
+  width: 120px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+}
+
+.conv-detail__score-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.conv-detail__comment-input {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.conv-detail__comment-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.conv-detail__submit-error {
+  color: var(--color-danger);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.conv-detail__submit-btn {
+  align-self: flex-start;
+  background: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.62rem 1.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.conv-detail__submit-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.conv-detail__submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

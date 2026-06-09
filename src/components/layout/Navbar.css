@@ -29,6 +29,14 @@
   align-items: center;
   gap: 2px;
   flex: 1;
+  overflow-x: auto;
+  /* Hide scrollbar visually while keeping it functional */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.navbar__nav::-webkit-scrollbar {
+  display: none;
 }
 
 .navbar__link {

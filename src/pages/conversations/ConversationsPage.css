@@ -1,0 +1,106 @@
+.conversations-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.conversations-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.conversations-page__title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.conversations-page__filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.conversations-page__filter-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.conversations-page__filter-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.conversations-page__filter-btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.conversations-page__error {
+  color: var(--color-danger);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.conversations-page__action-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.conversations-page__action-link:hover {
+  text-decoration: underline;
+}
+
+/* Score pill */
+.score-pill {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.score-pill--high { background: var(--color-success-bg); color: var(--color-success); }
+.score-pill--mid  { background: #fffbeb; color: #b45309; }
+.score-pill--low  { background: var(--color-danger-bg); color: var(--color-danger); }
+.score-pill--none { color: var(--color-text-muted); }
+
+[data-theme="dark"] .score-pill--mid { background: #2d1f0a; color: #fbbf24; }
+
+/* Review status badges */
+.review-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.review-badge--done {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.review-badge--pending {
+  background: #fff7ed;
+  color: #b45309;
+}
+
+[data-theme="dark"] .review-badge--pending {
+  background: #2d1f0a;
+  color: #fbbf24;
+}

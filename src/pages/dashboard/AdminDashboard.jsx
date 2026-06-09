@@ -50,6 +50,9 @@ function AdminDashboard() {
           <Link to="/lessons" className="dashboard__quick-link">
             Manage Lessons
           </Link>
+          <Link to="/grammar" className="dashboard__quick-link">
+            Grammar Rules
+          </Link>
         </div>
       </Card>
     </div>

@@ -9,6 +9,7 @@ const ROLE_NAVIGATION = {
   teacher: [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'My Students', path: '/students' },
+    { label: 'Conversations', path: '/conversations' },
     { label: 'My Reviews', path: '/reviews' },
     { label: 'Settings', path: '/settings' },
   ],

@@ -4,6 +4,7 @@
 
   /* Surface colors */
   --color-bg-page: #f0f9ff;
+  --color-bg-subtle: #f1f5f9;
   --color-surface: #ffffff;
   --color-border: #bae6fd;
 
@@ -15,6 +16,7 @@
   --color-primary-bg: #f0f9ff;
 
   /* Text */
+  --color-text-primary: #0f172a;
   --color-text-main: #0f172a;
   --color-text-secondary: #334155;
   --color-text-muted: #64748b;
@@ -29,9 +31,11 @@
 
 [data-theme="dark"] {
   --color-bg-page: #0f172a;
+  --color-bg-subtle: #1e293b;
   --color-surface: #1e293b;
   --color-border: #334155;
   --color-primary-bg: #0f2d47;
+  --color-text-primary: #f8fafc;
   --color-text-main: #f8fafc;
   --color-text-secondary: #e2e8f0;
   --color-text-muted: #94a3b8;

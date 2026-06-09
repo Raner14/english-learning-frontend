@@ -13,17 +13,19 @@ function GrammarPage() {
   const [confirmId, setConfirmId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
 
-  // Admin-only (students can read via API but admin manages it here)
-  if (user?.role !== 'admin') {
-    return <PlaceholderView title="Grammar Rules" />;
-  }
-
+  // Must be before any conditional return — React Rules of Hooks
   useEffect(() => {
+    if (user?.role !== 'admin') return;
     getAllGrammarRules()
       .then(setRules)
       .catch((err) => setError(err?.response?.data?.error?.message || 'Failed to load grammar rules.'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.role]);
+
+  // Admin-only
+  if (user?.role !== 'admin') {
+    return <PlaceholderView title="Grammar Rules" />;
+  }
 
   async function handleDelete(ruleId) {
     setDeletingId(ruleId);

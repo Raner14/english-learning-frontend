@@ -1,4 +1,4 @@
-import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import PlaceholderView from './components/common/PlaceholderView';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -6,6 +6,9 @@ import LessonDetailPage from './pages/lessons/LessonDetailPage';
 import AssessmentPage from './pages/assessment/AssessmentPage';
 import ReviewTeacherPage from './pages/reviews/ReviewTeacherPage';
 import GrammarPage from './pages/grammar/GrammarPage';
+import StudentProgressPage from './pages/students/StudentProgressPage';
+import ConversationsPage from './pages/conversations/ConversationsPage';
+import ConversationDetailPage from './pages/conversations/ConversationDetailPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import LessonsPage from './pages/lessons/LessonsPage';
 import ProgressPage from './pages/progress/ProgressPage';
@@ -34,6 +37,7 @@ const REAL_PAGES = {
   '/assessment': <AssessmentPage />,
   '/review-teacher': <ReviewTeacherPage />,
   '/grammar': <GrammarPage />,
+  '/conversations': <ConversationsPage />,
 };
 
 function App() {
@@ -63,6 +67,9 @@ function App() {
             ))}
             <Route path="/teachers/:teacherId" element={<TeacherProfilePage />} />
             <Route path="/lessons/:lessonId" element={<LessonDetailPage />} />
+            <Route path="/students/:studentId" element={<StudentProgressPage />} />
+            <Route path="/conversations/:conversationId" element={<ConversationDetailPage />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Routes>
       </BrowserRouter>

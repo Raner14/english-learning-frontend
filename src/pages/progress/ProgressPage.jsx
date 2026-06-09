@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getProgressStats, getProgressChart, getProgressSkills } from '../../services/progressService';
 import StatCard from '../../components/common/StatCard';
 import Card from '../../components/Card';
@@ -33,6 +34,16 @@ const HISTORY_COLUMNS = [
     key: 'teacherScore',
     label: 'Teacher Score',
     render: (v) => <ScorePill value={v} />,
+  },
+  {
+    key: 'conversationId',
+    label: '',
+    render: (v) =>
+      v ? (
+        <Link to={`/conversations/${v}`} className="progress-link-btn">
+          View
+        </Link>
+      ) : '—',
   },
 ];
 

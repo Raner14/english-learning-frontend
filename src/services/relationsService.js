@@ -21,7 +21,7 @@ async function updateRelationStatus(relationId, status) {
 }
 
 async function reviewTeacher(rating, feedback) {
-  const response = await api.post('/api/relations/my-teacher/review', { rating, feedback });
+  const response = await api.post('/api/relations/my-teacher/review', { rating, student_feedback: feedback });
   return response.data.data;
 }
 

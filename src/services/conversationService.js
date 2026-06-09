@@ -33,6 +33,11 @@ async function replyToConversation(conversationId, content) {
   return response.data.data;
 }
 
+async function listConversations(params = {}) {
+  const response = await api.get('/api/conversations', { params });
+  return response.data.data;
+}
+
 async function getStudentConversations(studentId) {
   const response = await api.get(`/api/students/${studentId}/conversations`);
   return response.data.data;
@@ -45,5 +50,6 @@ export {
   endConversation,
   addTeacherComment,
   replyToConversation,
+  listConversations,
   getStudentConversations,
 };
