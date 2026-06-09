@@ -3,6 +3,7 @@ const ROLE_NAVIGATION = {
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Manage Users', path: '/users' },
     { label: 'Manage Lessons', path: '/lessons' },
+    { label: 'Grammar Rules', path: '/grammar' },
     { label: 'Settings', path: '/settings' },
   ],
   teacher: [
@@ -17,6 +18,8 @@ const ROLE_NAVIGATION = {
     { label: 'My Progress', path: '/progress' },
     { label: 'Teachers', path: '/teachers' },
     { label: 'Match Teacher', path: '/match-teacher' },
+    { label: 'Assessment', path: '/assessment' },
+    { label: 'Review Teacher', path: '/review-teacher' },
     { label: 'Settings', path: '/settings' },
   ],
 };

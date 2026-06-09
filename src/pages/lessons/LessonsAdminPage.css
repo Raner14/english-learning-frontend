@@ -1,0 +1,199 @@
+.lessons-admin {
+  max-width: 900px;
+}
+
+.lessons-admin__header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.lessons-admin__title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.lessons-admin__count {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
+
+.lessons-admin__error {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.9rem;
+}
+
+/* ── Level badge ──────────────────────────────────── */
+.lessons-admin__level {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.lessons-admin__level--beginner {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.lessons-admin__level--intermediate {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.lessons-admin__level--advanced {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* ── Locked badge ─────────────────────────────────── */
+.lessons-admin__locked {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.lessons-admin__locked--no {
+  background: var(--color-primary-bg);
+  color: var(--color-primary-darker);
+}
+
+.lessons-admin__locked--yes {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* ── Table ────────────────────────────────────────── */
+.lessons-admin-table-wrap {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+}
+
+.lessons-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.lessons-admin-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.lessons-admin-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.1s;
+}
+
+.lessons-admin-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.lessons-admin-table tbody tr:hover {
+  background: var(--color-primary-bg);
+}
+
+.lessons-admin-table tbody tr.lessons-admin-table__row--deleting {
+  opacity: 0.5;
+}
+
+.lessons-admin-table tbody td {
+  padding: 12px 16px;
+  color: var(--color-text-main);
+  vertical-align: middle;
+}
+
+.lessons-admin-table__id {
+  color: var(--color-text-muted) !important;
+  font-size: 0.82rem !important;
+}
+
+.lessons-admin-table__title {
+  font-weight: 600;
+  max-width: 280px;
+}
+
+.lessons-admin-table__grammar {
+  font-size: 0.83rem !important;
+  color: var(--color-text-muted) !important;
+  font-family: monospace;
+}
+
+/* ── Action buttons ───────────────────────────────── */
+.lessons-admin-table__actions {
+  white-space: nowrap;
+}
+
+.lessons-admin-table__confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lessons-admin-table__confirm-label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.lessons-admin-table__btn {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+
+.lessons-admin-table__btn--delete {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.lessons-admin-table__btn--delete:hover:not(:disabled) {
+  background: #fecaca;
+}
+
+.lessons-admin-table__btn--danger {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+.lessons-admin-table__btn--danger:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.lessons-admin-table__btn--cancel {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.lessons-admin-table__btn--cancel:hover {
+  background: var(--color-primary-bg);
+}
+
+.lessons-admin-table__btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

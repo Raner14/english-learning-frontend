@@ -1,0 +1,175 @@
+.review-teacher-page {
+  max-width: 520px;
+}
+
+.review-teacher-page__title {
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.review-teacher-page__subtitle {
+  margin: 0 0 32px;
+  font-size: 0.93rem;
+  color: var(--color-text-secondary, #64748b);
+}
+
+.review-teacher__form {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.review-teacher__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.review-teacher__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #334155);
+}
+
+.review-teacher__optional {
+  font-weight: 400;
+  color: var(--color-text-secondary, #94a3b8);
+}
+
+/* Star input */
+.star-input {
+  display: flex;
+  gap: 6px;
+}
+
+.star-input__star {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #cbd5e1;
+  transition: color 0.1s, transform 0.1s;
+  padding: 0;
+  line-height: 1;
+}
+
+.star-input__star--active {
+  color: #f59e0b;
+}
+
+.star-input__star:hover {
+  transform: scale(1.15);
+}
+
+.review-teacher__rating-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-primary, #0ea5e9);
+  font-weight: 600;
+}
+
+/* Textarea */
+.review-teacher__textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  font-size: 0.93rem;
+  color: var(--color-text-primary, #0f172a);
+  background: var(--color-bg-subtle, #f8fafc);
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+  outline: none;
+}
+
+.review-teacher__textarea:focus {
+  border-color: var(--color-primary, #0ea5e9);
+}
+
+.review-teacher__char-count {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-text-secondary, #94a3b8);
+  text-align: right;
+}
+
+.review-teacher__error {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--color-danger, #dc2626);
+}
+
+.review-teacher__actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.review-teacher__btn {
+  padding: 11px 24px;
+  background: var(--color-primary, #0ea5e9);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.review-teacher__btn:hover:not(:disabled) {
+  background: #0284c7;
+}
+
+.review-teacher__btn:disabled {
+  background: #bae6fd;
+  cursor: default;
+}
+
+.review-teacher__btn--ghost {
+  background: none;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  color: var(--color-text-secondary, #64748b);
+}
+
+.review-teacher__btn--ghost:hover:not(:disabled) {
+  background: var(--color-bg-subtle, #f8fafc);
+}
+
+/* Success state */
+.review-teacher__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 32px;
+  background: #f0fdf4;
+  border: 2px solid #bbf7d0;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.review-teacher__success-icon {
+  margin: 0;
+  font-size: 3rem;
+  color: #16a34a;
+}
+
+.review-teacher__success-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #15803d;
+}
+
+.review-teacher__success-sub {
+  margin: 0;
+  font-size: 0.93rem;
+  color: #166534;
+}
