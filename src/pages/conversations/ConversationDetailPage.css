@@ -244,3 +244,172 @@
   opacity: 0.65;
   cursor: not-allowed;
 }
+
+/* Student feedback section */
+.conv-detail__feedback-section {
+  border-top: 1.5px solid var(--color-border);
+  padding-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.conv-detail__feedback {
+  background: var(--color-success-bg);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.conv-detail__feedback-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.conv-detail__feedback-score {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.conv-detail__feedback-comment {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.conv-detail__awaiting {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-surface);
+  border-radius: 8px;
+  border: 1px dashed var(--color-border);
+  margin: 0;
+}
+
+/* Reply thread */
+.conv-detail__thread {
+  border-top: 1.5px solid var(--color-border);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.conv-detail__thread-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem;
+}
+
+.conv-detail__thread-empty {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  margin: 0 0 1rem;
+}
+
+.conv-thread__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.conv-thread__msg {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 72%;
+}
+
+.conv-thread__msg--own {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.conv-thread__msg--other {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.conv-thread__role {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.conv-thread__bubble {
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.conv-thread__msg--own .conv-thread__bubble {
+  background: var(--color-primary);
+  color: #fff;
+  border-bottom-right-radius: 3px;
+}
+
+.conv-thread__msg--other .conv-thread__bubble {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: 3px;
+}
+
+.conv-thread__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.conv-thread__input {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+  resize: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.conv-thread__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.conv-thread__error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.conv-thread__send-btn {
+  align-self: flex-end;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.conv-thread__send-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.conv-thread__send-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

@@ -41,3 +41,110 @@
   font-size: 0.9rem;
   color: var(--color-danger, #dc2626);
 }
+
+.student-progress__section-title {
+  margin: 32px 0 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.student-progress__empty {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ── Conversations table ──────────────────────────── */
+.sp-conv-table-wrap {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+}
+
+.sp-conv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.sp-conv-table thead th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.sp-conv-table tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.1s;
+}
+
+.sp-conv-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.sp-conv-table tbody tr:hover {
+  background: var(--color-primary-bg);
+}
+
+.sp-conv-table tbody td {
+  padding: 12px 16px;
+  color: var(--color-text-main);
+  vertical-align: middle;
+}
+
+.sp-conv__lesson {
+  font-weight: 600;
+  max-width: 220px;
+}
+
+.sp-conv__score {
+  font-variant-numeric: tabular-nums;
+}
+
+.sp-conv__date {
+  color: var(--color-text-muted) !important;
+  font-size: 0.84rem !important;
+  white-space: nowrap;
+}
+
+.sp-conv__status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.sp-conv__status--done {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.sp-conv__status--active {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.sp-conv__view-btn {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-subtle, #e0f2fe);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sp-conv__view-btn:hover {
+  background: var(--color-primary);
+  color: #fff;
+}

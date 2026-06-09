@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getStudentProgress } from '../../services/progressService';
+import { getStudentConversations } from '../../services/conversationService';
 import StatCard from '../../components/common/StatCard';
 import PageLoader from '../../components/common/PageLoader';
 import './StudentProgressPage.css';
@@ -12,18 +14,35 @@ function formatDate(iso) {
   });
 }
 
+function StatusBadge({ status }) {
+  const done = status === 'completed';
+  return (
+    <span className={`sp-conv__status sp-conv__status--${done ? 'done' : 'active'}`}>
+      {done ? 'Completed' : 'Active'}
+    </span>
+  );
+}
+
 function StudentProgressPage() {
   const { studentId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const studentName = location.state?.name || `Student #${studentId}`;
+
   const [progress, setProgress] = useState(null);
+  const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    getStudentProgress(studentId)
-      .then(setProgress)
+    Promise.all([
+      getStudentProgress(studentId),
+      getStudentConversations(studentId).catch(() => []),
+    ])
+      .then(([progressData, convsData]) => {
+        setProgress(progressData);
+        setConversations(convsData || []);
+      })
       .catch((err) => setError(err?.response?.data?.error?.message || 'Failed to load student progress.'))
       .finally(() => setLoading(false));
   }, [studentId]);
@@ -65,6 +84,52 @@ function StudentProgressPage() {
         <p className="student-progress__last-active">
           Last active: {formatDate(progress.lastActivityDate)}
         </p>
+      )}
+
+      <h2 className="student-progress__section-title">Conversation History</h2>
+
+      {conversations.length === 0 ? (
+        <p className="student-progress__empty">No conversations yet.</p>
+      ) : (
+        <div className="sp-conv-table-wrap">
+          <table className="sp-conv-table">
+            <thead>
+              <tr>
+                <th>Lesson</th>
+                <th>AI Score</th>
+                <th>Teacher Score</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {conversations.map((conv) => (
+                <tr key={conv.conversationId}>
+                  <td className="sp-conv__lesson">
+                    {conv.lessonTitle || `Lesson #${conv.lessonId}`}
+                  </td>
+                  <td className="sp-conv__score">
+                    {conv.aiScore != null ? `${conv.aiScore}/100` : '—'}
+                  </td>
+                  <td className="sp-conv__score">
+                    {conv.teacherScore != null ? `${conv.teacherScore}/100` : '—'}
+                  </td>
+                  <td><StatusBadge status={conv.status} /></td>
+                  <td className="sp-conv__date">{formatDate(conv.createdAt)}</td>
+                  <td>
+                    <Link
+                      to={`/conversations/${conv.conversationId}`}
+                      className="sp-conv__view-btn"
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

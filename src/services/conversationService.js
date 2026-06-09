@@ -28,8 +28,8 @@ async function addTeacherComment(conversationId, teacherScore, teacherComment) {
   return response.data.data;
 }
 
-async function replyToConversation(conversationId, content) {
-  const response = await api.post(`/api/conversations/${conversationId}/reply`, { content });
+async function replyToConversation(conversationId, role, content) {
+  const response = await api.post(`/api/conversations/${conversationId}/reply`, { role, content });
   return response.data.data;
 }
 

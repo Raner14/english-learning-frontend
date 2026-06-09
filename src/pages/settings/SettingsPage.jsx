@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getSettings, updateSettings } from '../../services/settingsService';
+import { getMyTeacherProfile, updateTeacher } from '../../services/teacherService';
 import { deleteUser } from '../../services/userService';
 import { logout as logoutRequest } from '../../services/authService';
 import PageLoader from '../../components/common/PageLoader';
@@ -11,40 +12,104 @@ import './SettingsPage.css';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const SPECIALTIES_OPTIONS = [
+  'Grammar', 'Tech English', 'Interview Prep',
+  'Speaking', 'Vocabulary', 'Writing', 'Listening',
+];
+const LEVEL_OPTIONS = ['Beginner', 'Intermediate', 'Advanced'];
+const AVAILABILITY_OPTIONS = [
+  { value: '', label: '— not set —' },
+  { value: 'mornings', label: 'Mornings' },
+  { value: 'evenings', label: 'Evenings' },
+  { value: 'flexible', label: 'Flexible' },
+  { value: 'weekends', label: 'Weekends' },
+];
+const FEEDBACK_OPTIONS = [
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'biweekly', label: 'Biweekly' },
+];
+
+const BLANK_TEACHER_FORM = {
+  bio: '',
+  experience: '',
+  pricePerWeek: '',
+  available: false,
+  onlineOnly: false,
+  availability: '',
+  feedbackFrequency: 'weekly',
+  specialties: [],
+  teachingLevels: [],
+};
+
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+}
+
+function profileToForm(t) {
+  return {
+    bio: t.bio || '',
+    experience: t.experience || '',
+    pricePerWeek: t.pricePerWeek !== null && t.pricePerWeek !== undefined ? String(t.pricePerWeek) : '',
+    available: t.available ?? false,
+    onlineOnly: t.onlineOnly ?? false,
+    availability: t.availability || '',
+    feedbackFrequency: t.feedbackFrequency || 'weekly',
+    specialties: t.specialties || [],
+    teachingLevels: t.teachingLevels || [],
+  };
+}
+
+function toggleItem(arr, item) {
+  return arr.includes(item) ? arr.filter((i) => i !== item) : [...arr, item];
 }
 
 function SettingsPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const isTeacher = user?.role === 'teacher';
 
   const [pageLoading, setPageLoading] = useState(true);
   const [pageError, setPageError] = useState('');
 
+  // Personal settings
   const [form, setForm] = useState({ displayName: '', email: '', theme: 'light' });
   const [errors, setErrors] = useState({});
-
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState('');
 
+  // Teacher profile
+  const [teacherProfile, setTeacherProfile] = useState(null);
+  const [teacherForm, setTeacherForm] = useState(BLANK_TEACHER_FORM);
+  const [teacherSaving, setTeacherSaving] = useState(false);
+  const [teacherSaveSuccess, setTeacherSaveSuccess] = useState(false);
+  const [teacherSaveError, setTeacherSaveError] = useState('');
+
+  // Delete account
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
-    getSettings()
-      .then((data) => {
-        const theme = data.theme === 'dark' ? 'dark' : 'light';
-        setForm({ displayName: data.displayName || '', email: data.email || '', theme });
+    const promises = [getSettings()];
+    if (isTeacher) promises.push(getMyTeacherProfile());
+
+    Promise.all(promises)
+      .then(([settingsData, teacherData]) => {
+        const theme = settingsData.theme === 'dark' ? 'dark' : 'light';
+        setForm({ displayName: settingsData.displayName || '', email: settingsData.email || '', theme });
         applyTheme(theme);
+        if (teacherData) {
+          setTeacherProfile(teacherData);
+          setTeacherForm(profileToForm(teacherData));
+        }
       })
       .catch((err) => {
         setPageError(err?.response?.data?.error?.message || 'Failed to load settings.');
       })
       .finally(() => setPageLoading(false));
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -93,6 +158,38 @@ function SettingsPage() {
     }
   }
 
+  function handleTeacherFieldChange(field, value) {
+    setTeacherForm((prev) => ({ ...prev, [field]: value }));
+    setTeacherSaveSuccess(false);
+    setTeacherSaveError('');
+  }
+
+  async function handleTeacherSave(e) {
+    e.preventDefault();
+    setTeacherSaving(true);
+    setTeacherSaveSuccess(false);
+    setTeacherSaveError('');
+
+    try {
+      await updateTeacher(teacherProfile.teacherId, {
+        bio: teacherForm.bio.trim() || null,
+        experience: teacherForm.experience.trim(),
+        pricePerWeek: Number(teacherForm.pricePerWeek),
+        available: teacherForm.available,
+        onlineOnly: teacherForm.onlineOnly,
+        availability: teacherForm.availability || null,
+        feedbackFrequency: teacherForm.feedbackFrequency,
+        specialties: teacherForm.specialties,
+        teachingLevels: teacherForm.teachingLevels,
+      });
+      setTeacherSaveSuccess(true);
+    } catch (err) {
+      setTeacherSaveError(err?.response?.data?.error?.message || 'Failed to save teacher profile.');
+    } finally {
+      setTeacherSaving(false);
+    }
+  }
+
   async function handleDeleteAccount() {
     setDeleting(true);
     setDeleteError('');
@@ -121,6 +218,7 @@ function SettingsPage() {
     <div className="settings-page">
       <h1 className="settings-page__title">Settings</h1>
 
+      {/* ── Personal Information ───────────────────── */}
       <Card className="settings-card">
         <h2 className="settings-card__heading">Personal Information</h2>
 
@@ -198,6 +296,158 @@ function SettingsPage() {
         </form>
       </Card>
 
+      {/* ── Teacher Profile (teacher role only) ───── */}
+      {isTeacher && teacherProfile && (
+        <Card className="settings-card">
+          <h2 className="settings-card__heading">Teacher Profile</h2>
+
+          <form onSubmit={handleTeacherSave} noValidate>
+            <div className="settings-field">
+              <label htmlFor="tp-bio" className="settings-label">
+                Bio <span className="settings-label__optional">(optional)</span>
+              </label>
+              <textarea
+                id="tp-bio"
+                className="settings-input settings-textarea"
+                value={teacherForm.bio}
+                onChange={(e) => handleTeacherFieldChange('bio', e.target.value)}
+                rows={3}
+                maxLength={500}
+                placeholder="Tell students about yourself…"
+              />
+              <p className="settings-char-count">{teacherForm.bio.length}/500</p>
+            </div>
+
+            <div className="settings-field">
+              <label htmlFor="tp-experience" className="settings-label">Experience</label>
+              <input
+                id="tp-experience"
+                type="text"
+                className="settings-input"
+                value={teacherForm.experience}
+                onChange={(e) => handleTeacherFieldChange('experience', e.target.value)}
+                placeholder="e.g. 5 years in Tech English"
+                maxLength={120}
+                required
+              />
+            </div>
+
+            <div className="settings-field">
+              <label htmlFor="tp-price" className="settings-label">Price per Week ($)</label>
+              <input
+                id="tp-price"
+                type="number"
+                className="settings-input"
+                value={teacherForm.pricePerWeek}
+                onChange={(e) => handleTeacherFieldChange('pricePerWeek', e.target.value)}
+                min={0}
+                required
+              />
+            </div>
+
+            <div className="settings-field">
+              <label htmlFor="tp-feedback" className="settings-label">Feedback Frequency</label>
+              <select
+                id="tp-feedback"
+                className="settings-input"
+                value={teacherForm.feedbackFrequency}
+                onChange={(e) => handleTeacherFieldChange('feedbackFrequency', e.target.value)}
+              >
+                {FEEDBACK_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="settings-field">
+              <label htmlFor="tp-availability" className="settings-label">
+                Availability <span className="settings-label__optional">(optional)</span>
+              </label>
+              <select
+                id="tp-availability"
+                className="settings-input"
+                value={teacherForm.availability}
+                onChange={(e) => handleTeacherFieldChange('availability', e.target.value)}
+              >
+                {AVAILABILITY_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="settings-field">
+              <p className="settings-label">Toggles</p>
+              <div className="settings-toggles">
+                <label className={`settings-toggle${teacherForm.available ? ' settings-toggle--on' : ''}`}>
+                  <input
+                    type="checkbox"
+                    className="settings-toggle__input"
+                    checked={teacherForm.available}
+                    onChange={(e) => handleTeacherFieldChange('available', e.target.checked)}
+                  />
+                  <span className="settings-toggle__track" />
+                  <span className="settings-toggle__label">Accepting students</span>
+                </label>
+                <label className={`settings-toggle${teacherForm.onlineOnly ? ' settings-toggle--on' : ''}`}>
+                  <input
+                    type="checkbox"
+                    className="settings-toggle__input"
+                    checked={teacherForm.onlineOnly}
+                    onChange={(e) => handleTeacherFieldChange('onlineOnly', e.target.checked)}
+                  />
+                  <span className="settings-toggle__track" />
+                  <span className="settings-toggle__label">Online sessions only</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="settings-field">
+              <p className="settings-label">Specialties</p>
+              <div className="settings-chips">
+                {SPECIALTIES_OPTIONS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    className={`settings-chip${teacherForm.specialties.includes(s) ? ' settings-chip--on' : ''}`}
+                    onClick={() => handleTeacherFieldChange('specialties', toggleItem(teacherForm.specialties, s))}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="settings-field">
+              <p className="settings-label">Teaching Levels</p>
+              <div className="settings-chips">
+                {LEVEL_OPTIONS.map((lvl) => (
+                  <button
+                    key={lvl}
+                    type="button"
+                    className={`settings-chip${teacherForm.teachingLevels.includes(lvl) ? ' settings-chip--on' : ''}`}
+                    onClick={() => handleTeacherFieldChange('teachingLevels', toggleItem(teacherForm.teachingLevels, lvl))}
+                  >
+                    {lvl}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {teacherSaveSuccess && (
+              <p className="settings-card__success" role="status">Teacher profile saved!</p>
+            )}
+            {teacherSaveError && (
+              <p className="settings-card__error" role="alert">{teacherSaveError}</p>
+            )}
+
+            <Button type="submit" isLoading={teacherSaving} disabled={teacherSaving}>
+              Save Profile
+            </Button>
+          </form>
+        </Card>
+      )}
+
+      {/* ── Danger Zone ───────────────────────────── */}
       <Card className="settings-card settings-card--danger">
         <h2 className="settings-card__heading settings-card__heading--danger">Danger Zone</h2>
         <p className="settings-card__description">

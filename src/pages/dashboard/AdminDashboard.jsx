@@ -53,6 +53,9 @@ function AdminDashboard() {
           <Link to="/grammar" className="dashboard__quick-link">
             Grammar Rules
           </Link>
+          <Link to="/relations" className="dashboard__quick-link">
+            Manage Relations
+          </Link>
         </div>
       </Card>
     </div>

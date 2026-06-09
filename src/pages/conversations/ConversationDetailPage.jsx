@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getConversation, addTeacherComment } from '../../services/conversationService';
+import { getConversation, addTeacherComment, replyToConversation } from '../../services/conversationService';
 import PageLoader from '../../components/common/PageLoader';
 import './ConversationDetailPage.css';
 
@@ -15,6 +15,17 @@ function ChatMessage({ role, content }) {
   );
 }
 
+function ThreadMessage({ reply, isOwnMessage }) {
+  return (
+    <div className={`conv-thread__msg conv-thread__msg--${isOwnMessage ? 'own' : 'other'}`}>
+      <span className="conv-thread__role">
+        {isOwnMessage ? 'You' : reply.role === 'teacher' ? 'Teacher' : 'Student'}
+      </span>
+      <p className="conv-thread__bubble">{reply.content}</p>
+    </div>
+  );
+}
+
 function ConversationDetailPage() {
   const { conversationId } = useParams();
   const navigate = useNavigate();
@@ -24,20 +35,36 @@ function ConversationDetailPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
 
+  // Teacher review form
   const [teacherScore, setTeacherScore] = useState('');
   const [teacherComment, setTeacherComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
+  // Reply thread
+  const [replies, setReplies] = useState([]);
+  const [replyText, setReplyText] = useState('');
+  const [replySubmitting, setReplySubmitting] = useState(false);
+  const [replyError, setReplyError] = useState('');
+
+  const threadEndRef = useRef(null);
+
   useEffect(() => {
     getConversation(conversationId)
-      .then(setConversation)
+      .then((data) => {
+        setConversation(data);
+        setReplies(data.replies || []);
+      })
       .catch((err) => setLoadError(err?.response?.data?.error?.message || 'Failed to load conversation.'))
       .finally(() => setLoading(false));
   }, [conversationId]);
 
-  async function handleSubmit(e) {
+  useEffect(() => {
+    threadEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [replies]);
+
+  async function handleSubmitReview(e) {
     e.preventDefault();
     const score = Number(teacherScore);
     if (!teacherScore || score < 0 || score > 100) {
@@ -66,6 +93,24 @@ function ConversationDetailPage() {
     }
   }
 
+  async function handleReply(e) {
+    e.preventDefault();
+    const content = replyText.trim();
+    if (!content) return;
+
+    setReplySubmitting(true);
+    setReplyError('');
+    try {
+      const data = await replyToConversation(conversationId, user.role, content);
+      setReplies((prev) => [...prev, data.reply]);
+      setReplyText('');
+    } catch (err) {
+      setReplyError(err?.response?.data?.error?.message || 'Failed to send reply.');
+    } finally {
+      setReplySubmitting(false);
+    }
+  }
+
   if (loading) return <PageLoader text="Loading conversation…" />;
 
   const isTeacher = user?.role === 'teacher';
@@ -84,6 +129,7 @@ function ConversationDetailPage() {
   }
 
   const alreadyReviewed = conversation.teacherScore != null;
+  const showThread = alreadyReviewed || submitted;
 
   return (
     <div className="conv-detail">
@@ -114,7 +160,7 @@ function ConversationDetailPage() {
         ))}
       </div>
 
-      {/* Teacher review section */}
+      {/* Teacher: review form or existing review */}
       {isTeacher && (
         <div className="conv-detail__review-section">
           {(alreadyReviewed || submitted) ? (
@@ -129,7 +175,7 @@ function ConversationDetailPage() {
               )}
             </div>
           ) : (
-            <form className="conv-detail__review-form" onSubmit={handleSubmit} noValidate>
+            <form className="conv-detail__review-form" onSubmit={handleSubmitReview} noValidate>
               <h3 className="conv-detail__review-heading">Add Review</h3>
 
               <div className="conv-detail__field">
@@ -175,6 +221,70 @@ function ConversationDetailPage() {
               </button>
             </form>
           )}
+        </div>
+      )}
+
+      {/* Student: teacher feedback */}
+      {!isTeacher && (
+        <div className="conv-detail__feedback-section">
+          {alreadyReviewed ? (
+            <div className="conv-detail__feedback">
+              <h3 className="conv-detail__feedback-heading">Teacher Feedback</h3>
+              <div className="conv-detail__feedback-score">
+                Teacher score: <strong>{conversation.teacherScore}/100</strong>
+              </div>
+              {conversation.teacherComment && (
+                <p className="conv-detail__feedback-comment">"{conversation.teacherComment}"</p>
+              )}
+            </div>
+          ) : (
+            conversation.status === 'completed' && (
+              <p className="conv-detail__awaiting">
+                Your teacher hasn't reviewed this conversation yet.
+              </p>
+            )
+          )}
+        </div>
+      )}
+
+      {/* Reply thread — visible to both roles once reviewed */}
+      {showThread && (
+        <div className="conv-detail__thread">
+          <h3 className="conv-detail__thread-heading">Discussion</h3>
+
+          {replies.length === 0 && (
+            <p className="conv-detail__thread-empty">No replies yet. Start the discussion below.</p>
+          )}
+
+          <div className="conv-thread__list">
+            {replies.map((reply, i) => (
+              <ThreadMessage
+                key={i}
+                reply={reply}
+                isOwnMessage={reply.role === user.role}
+              />
+            ))}
+            <div ref={threadEndRef} />
+          </div>
+
+          <form className="conv-thread__form" onSubmit={handleReply} noValidate>
+            <textarea
+              className="conv-thread__input"
+              rows={2}
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write a reply…"
+              disabled={replySubmitting}
+            />
+            {replyError && <p className="conv-thread__error">{replyError}</p>}
+            <button
+              type="submit"
+              className="conv-thread__send-btn"
+              disabled={replySubmitting || !replyText.trim()}
+            >
+              {replySubmitting ? 'Sending…' : 'Send Reply'}
+            </button>
+          </form>
         </div>
       )}
     </div>

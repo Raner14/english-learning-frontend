@@ -10,6 +10,28 @@
   flex-wrap: wrap;
 }
 
+.lessons-admin__add-btn {
+  margin-left: auto;
+  padding: 7px 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lessons-admin__add-btn:hover:not(:disabled) {
+  background: var(--color-primary-darker, #0284c7);
+}
+
+.lessons-admin__add-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 .lessons-admin__title {
   margin: 0;
   font-size: 1.8rem;
@@ -29,6 +51,122 @@
   background: var(--color-danger-bg);
   color: var(--color-danger);
   font-size: 0.9rem;
+}
+
+/* ── Create / Edit form ───────────────────────────── */
+.lessons-admin__form {
+  margin-bottom: 28px;
+  padding: 24px;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.lessons-admin__form-title {
+  margin: 0 0 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.lessons-admin__form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.lessons-admin__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lessons-admin__field--full {
+  grid-column: 1 / -1;
+}
+
+.lessons-admin__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lessons-admin__input,
+.lessons-admin__textarea,
+.lessons-admin__select {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-main);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.lessons-admin__input:focus,
+.lessons-admin__textarea:focus,
+.lessons-admin__select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.lessons-admin__textarea {
+  resize: vertical;
+}
+
+.lessons-admin__form-error {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.88rem;
+}
+
+.lessons-admin__form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.lessons-admin__submit-btn {
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lessons-admin__submit-btn:hover:not(:disabled) {
+  background: var(--color-primary-darker, #0284c7);
+}
+
+.lessons-admin__submit-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.lessons-admin__cancel-btn {
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lessons-admin__cancel-btn:hover:not(:disabled) {
+  background: var(--color-primary-bg);
 }
 
 /* ── Level badge ──────────────────────────────────── */
@@ -196,4 +334,19 @@
 .lessons-admin-table__btn:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.lessons-admin-table__action-group {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.lessons-admin-table__btn--edit {
+  background: var(--color-primary-bg);
+  color: var(--color-primary-darker, #0284c7);
+}
+
+.lessons-admin-table__btn--edit:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: #fff;
 }

@@ -13,6 +13,7 @@ const APP_ROUTES = [
   { path: '/review-teacher', title: 'Review Teacher View' },
   { path: '/grammar', title: 'Grammar Rules View' },
   { path: '/conversations', title: 'Conversations View' },
+  { path: '/relations', title: 'Relations View' },
 ];
 
 export { APP_ROUTES };

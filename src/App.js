@@ -19,6 +19,7 @@ import SettingsPage from './pages/settings/SettingsPage';
 import StudentsPage from './pages/students/StudentsPage';
 import ReviewsPage from './pages/reviews/ReviewsPage';
 import UsersPage from './pages/users/UsersPage';
+import RelationsPage from './pages/relations/RelationsPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import { APP_ROUTES } from './config/appRoutes';
@@ -38,6 +39,7 @@ const REAL_PAGES = {
   '/review-teacher': <ReviewTeacherPage />,
   '/grammar': <GrammarPage />,
   '/conversations': <ConversationsPage />,
+  '/relations': <RelationsPage />,
 };
 
 function App() {

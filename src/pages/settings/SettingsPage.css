@@ -145,6 +145,109 @@
   display: none;
 }
 
+/* ── Teacher profile extras ───────────────────────── */
+.settings-textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.settings-label__optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.settings-char-count {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+/* Chip multi-select */
+.settings-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.settings-chip {
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.settings-chip:hover {
+  border-color: var(--color-primary-light);
+  background: var(--color-primary-bg);
+}
+
+.settings-chip--on {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+  color: var(--color-primary-dark);
+}
+
+/* Toggle switches */
+.settings-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.settings-toggle__input {
+  display: none;
+}
+
+.settings-toggle__track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--color-border);
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.settings-toggle__track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.settings-toggle--on .settings-toggle__track {
+  background: var(--color-primary);
+}
+
+.settings-toggle--on .settings-toggle__track::after {
+  transform: translateX(20px);
+}
+
+.settings-toggle__label {
+  font-size: 0.92rem;
+  color: var(--color-text-main);
+}
+
 /* ── Delete confirmation ──────────────────────────── */
 .settings-delete-confirm {
   display: flex;
