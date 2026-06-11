@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { savePreferences } from '../../services/matchingService';
-import { requestTeacher } from '../../services/relationsService';
+import { requestTeacher, getMyRelations } from '../../services/relationsService';
 import Button from '../../components/common/Button';
 import './MatchTeacherPage.css';
 
@@ -76,16 +76,24 @@ function MatchTeacherPage() {
     setRecommendations(null);
 
     try {
-      const results = await savePreferences({
-        budget_max: Number(form.budget_max),
-        learning_goal: form.learning_goal.trim(),
-        onboarding_text: form.onboarding_text.trim() || form.learning_goal.trim(),
-        currentLevel: form.currentLevel,
-        availability: form.availability,
-        mainGoal: form.mainGoal,
-        onlineOnly: form.onlineOnly,
+      const [results, myRelations] = await Promise.all([
+        savePreferences({
+          budget_max: Number(form.budget_max),
+          learning_goal: form.learning_goal.trim(),
+          onboarding_text: form.onboarding_text.trim() || form.learning_goal.trim(),
+          currentLevel: form.currentLevel,
+          availability: form.availability,
+          mainGoal: form.mainGoal,
+          onlineOnly: form.onlineOnly,
+        }),
+        getMyRelations(),
+      ]);
+      setRecommendations((results || []).slice().sort((a, b) => b.rank - a.rank));
+      const initial = {};
+      myRelations.forEach((r) => {
+        initial[r.teacherId] = r.status === 'active' ? 'exists' : 'success';
       });
-      setRecommendations(results || []);
+      setRequestStatus(initial);
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 50);

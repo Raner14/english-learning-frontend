@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getProgressStats, getProgressChart, getProgressSkills } from '../../services/progressService';
+import { getProgressStats, getProgressChart } from '../../services/progressService';
 import StatCard from '../../components/common/StatCard';
-import Card from '../../components/Card';
 import DataTable from '../../components/tables/DataTable';
 import PageLoader from '../../components/common/PageLoader';
 import './ProgressPage.css';
@@ -50,7 +49,6 @@ const HISTORY_COLUMNS = [
 function ProgressPage() {
   const [stats, setStats] = useState(null);
   const [history, setHistory] = useState([]);
-  const [skills, setSkills] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -58,12 +56,10 @@ function ProgressPage() {
     Promise.all([
       getProgressStats(),
       getProgressChart(),
-      getProgressSkills(),
     ])
-      .then(([statsData, chartData, skillsData]) => {
+      .then(([statsData, chartData]) => {
         setStats(statsData);
         setHistory(chartData);
-        setSkills(skillsData.skillsRadar || '');
       })
       .catch((err) => {
         setError(err?.response?.data?.error?.message || 'Failed to load progress data.');
@@ -105,15 +101,6 @@ function ProgressPage() {
           emptyMessage="No completed conversations yet. Start a lesson to get your first score!"
         />
       </section>
-
-      {skills && (
-        <section className="progress-page__section">
-          <h2 className="progress-page__section-title">Skills Feedback</h2>
-          <Card>
-            <p className="progress-page__skills-text">{skills}</p>
-          </Card>
-        </section>
-      )}
 
       {stats.lastActivityDate && (
         <p className="progress-page__last-activity">

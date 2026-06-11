@@ -20,6 +20,7 @@ const ROLE_NAVIGATION = {
     { label: 'Lessons', path: '/lessons' },
     { label: 'My Progress', path: '/progress' },
     { label: 'Teachers', path: '/teachers' },
+    { label: 'My Teachers', path: '/my-teachers' },
     { label: 'Match Teacher', path: '/match-teacher' },
     { label: 'Assessment', path: '/assessment' },
     { label: 'Review Teacher', path: '/review-teacher' },

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllTeachers } from '../../services/teacherService';
-import { requestTeacher } from '../../services/relationsService';
+import { requestTeacher, removeRelation, getMyRelations } from '../../services/relationsService';
 import TeacherCard from '../../components/cards/TeacherCard';
 import PageLoader from '../../components/common/PageLoader';
 import './TeachersPage.css';
@@ -17,10 +17,28 @@ function TeachersPage() {
 
   // Per-teacher request button state: { [teacherId]: 'idle'|'loading'|'success'|'exists'|'error' }
   const [requestStatus, setRequestStatus] = useState({});
+  // Maps teacherId → relationId for active connections (used by handleRemove)
+  const [relationIdByTeacherId, setRelationIdByTeacherId] = useState({});
+  // Per-teacher remove button state: { [teacherId]: 'idle'|'loading'|'error' }
+  const [removeStatus, setRemoveStatus] = useState({});
 
   useEffect(() => {
-    getAllTeachers()
-      .then(setTeachers)
+    Promise.all([getAllTeachers(), getMyRelations()])
+      .then(([teacherList, myRelations]) => {
+        setTeachers(teacherList);
+        const statusMap = {};
+        const relIdMap = {};
+        myRelations.forEach((r) => {
+          if (r.status === 'active') {
+            statusMap[r.teacherId] = 'exists';
+            relIdMap[r.teacherId] = r.relationId;
+          } else {
+            statusMap[r.teacherId] = 'success';
+          }
+        });
+        setRequestStatus(statusMap);
+        setRelationIdByTeacherId(relIdMap);
+      })
       .catch((err) => {
         setError(err?.response?.data?.error?.message || 'Failed to load teachers.');
       })
@@ -46,6 +64,24 @@ function TeachersPage() {
       const code = err?.response?.data?.error?.code;
       const next = code === 'RELATION_ALREADY_EXISTS' ? 'exists' : 'error';
       setRequestStatus((prev) => ({ ...prev, [teacherId]: next }));
+    }
+  }
+
+  async function handleRemove(teacherId) {
+    const relationId = relationIdByTeacherId[teacherId];
+    if (!relationId) return;
+    setRemoveStatus((prev) => ({ ...prev, [teacherId]: 'loading' }));
+    try {
+      await removeRelation(relationId);
+      setRequestStatus((prev) => ({ ...prev, [teacherId]: 'idle' }));
+      setRelationIdByTeacherId((prev) => {
+        const next = { ...prev };
+        delete next[teacherId];
+        return next;
+      });
+      setRemoveStatus((prev) => ({ ...prev, [teacherId]: 'idle' }));
+    } catch {
+      setRemoveStatus((prev) => ({ ...prev, [teacherId]: 'error' }));
     }
   }
 
@@ -127,6 +163,8 @@ function TeachersPage() {
               teacher={teacher}
               requestStatus={requestStatus[teacher.teacherId] ?? 'idle'}
               onRequest={handleRequest}
+              onRemove={relationIdByTeacherId[teacher.teacherId] ? handleRemove : undefined}
+              removeStatus={removeStatus[teacher.teacherId] ?? 'idle'}
             />
           ))}
         </div>

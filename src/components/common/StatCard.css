@@ -8,6 +8,8 @@
   gap: 6px;
   box-shadow: 0 2px 8px rgba(14, 165, 233, 0.08);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+  container-type: inline-size;
+  min-width: 0;
 }
 
 .stat-card:hover {
@@ -26,10 +28,13 @@
 
 .stat-card__value {
   margin: 0;
-  font-size: 2rem;
+  font-size: clamp(1.1rem, 4cqw, 2rem);
   font-weight: 800;
   color: var(--color-primary-dark);
   line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .stat-card__subtitle {

@@ -5,11 +5,6 @@ async function getProgressStats() {
   return response.data.data;
 }
 
-async function getProgressSkills() {
-  const response = await api.get('/api/progress/skills');
-  return response.data.data;
-}
-
 async function getNextLesson() {
   const response = await api.get('/api/progress/next-lesson');
   return response.data.data;
@@ -25,4 +20,4 @@ async function getStudentProgress(studentId) {
   return response.data.data;
 }
 
-export { getProgressStats, getProgressSkills, getProgressChart, getNextLesson, getStudentProgress };
+export { getProgressStats, getProgressChart, getNextLesson, getStudentProgress };

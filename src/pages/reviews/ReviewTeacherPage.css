@@ -142,6 +142,102 @@
   background: var(--color-bg-subtle, #f8fafc);
 }
 
+/* Back link (step 2 header) */
+.review-teacher__back {
+  background: none;
+  border: none;
+  color: var(--color-primary, #0ea5e9);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.review-teacher__back:hover {
+  text-decoration: underline;
+}
+
+/* Teacher list (step 1) */
+.review-teacher__search {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  font-size: 0.93rem;
+  color: var(--color-text-primary, #0f172a);
+  background: var(--color-bg-subtle, #f8fafc);
+  outline: none;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.review-teacher__search:focus {
+  border-color: var(--color-primary, #0ea5e9);
+}
+
+.review-teacher__teacher-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-teacher__teacher-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--color-surface, #fff);
+  border: 1.5px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+
+.review-teacher__teacher-card:hover {
+  border-color: var(--color-primary, #0ea5e9);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.1);
+}
+
+.review-teacher__teacher-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.review-teacher__teacher-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #0f172a);
+}
+
+.review-teacher__teacher-stars {
+  font-size: 0.9rem;
+  color: #f59e0b;
+  letter-spacing: 1px;
+}
+
+.review-teacher__teacher-cta {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary, #0ea5e9);
+  white-space: nowrap;
+}
+
+.review-teacher__empty {
+  margin: 24px 0 0;
+  font-size: 0.93rem;
+  color: var(--color-text-secondary, #64748b);
+}
+
 /* Success state */
 .review-teacher__success {
   display: flex;

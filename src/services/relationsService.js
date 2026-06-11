@@ -20,8 +20,23 @@ async function updateRelationStatus(relationId, status) {
   return response.data.data;
 }
 
-async function reviewTeacher(rating, feedback) {
-  const response = await api.post('/api/relations/my-teacher/review', { rating, student_feedback: feedback });
+async function getMyRelations() {
+  const response = await api.get('/api/relations/my-relations');
+  return response.data.data;
+}
+
+async function removeRelation(relationId) {
+  const response = await api.delete(`/api/relations/${relationId}`);
+  return response.data.data;
+}
+
+async function getMyTeachers() {
+  const response = await api.get('/api/relations/my-teachers');
+  return response.data.data;
+}
+
+async function reviewTeacher(relationId, rating, feedback) {
+  const response = await api.post('/api/relations/my-teacher/review', { relationId, rating, student_feedback: feedback });
   return response.data.data;
 }
 
@@ -33,7 +48,10 @@ async function getAllRelations(status) {
 
 export {
   requestTeacher,
+  removeRelation,
+  getMyRelations,
   getMyStudents,
+  getMyTeachers,
   getPendingRequests,
   updateRelationStatus,
   reviewTeacher,

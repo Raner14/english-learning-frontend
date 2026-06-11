@@ -7,6 +7,7 @@ const APP_ROUTES = [
   { path: '/progress', title: 'Progress View' },
   { path: '/settings', title: 'Settings View' },
   { path: '/teachers', title: 'Teachers View' },
+  { path: '/my-teachers', title: 'My Teachers View' },
   { path: '/match-teacher', title: 'Match Teacher View' },
   { path: '/reviews', title: 'Reviews View' },
   { path: '/assessment', title: 'Assessment View' },

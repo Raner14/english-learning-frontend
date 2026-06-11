@@ -4,12 +4,12 @@ import { getLessonCatalog } from '../../services/lessonService';
 import LessonCard from '../../components/cards/LessonCard';
 import PageLoader from '../../components/common/PageLoader';
 
-const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
+const LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 
 function LessonCatalog() {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
-  const [activeTab, setActiveTab] = useState('All');
+  const [activeTab, setActiveTab] = useState('Beginner');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -24,8 +24,7 @@ function LessonCatalog() {
   }, []);
 
   const q = searchQuery.trim().toLowerCase();
-  const levelFiltered =
-    activeTab === 'All' ? lessons : lessons.filter((l) => l.level === activeTab);
+  const levelFiltered = lessons.filter((l) => l.level === activeTab);
   const visibleLessons = q
     ? levelFiltered.filter(
         (l) =>
@@ -37,7 +36,7 @@ function LessonCatalog() {
 
   if (loading) return <PageLoader text="Loading lessons..." />;
 
-  const isFiltered = q || activeTab !== 'All';
+  const isFiltered = !!q;
 
   return (
     <div className="lessons-page">

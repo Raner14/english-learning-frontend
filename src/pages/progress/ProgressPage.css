@@ -37,11 +37,30 @@
   line-height: 1.6;
 }
 
-/* ── Footer note ──────────────────────────────────── */
+/* ── Last activity badge ──────────────────────────── */
 .progress-page__last-activity {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+  border: 1.5px solid var(--color-primary, #0ea5e9);
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0369a1;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.14);
+}
+
+.progress-page__last-activity::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary, #0ea5e9);
+  flex-shrink: 0;
 }
 
 /* ── Error ────────────────────────────────────────── */

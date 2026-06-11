@@ -17,6 +17,7 @@ import ProgressPage from './pages/progress/ProgressPage';
 import TeachersPage from './pages/teachers/TeachersPage';
 import TeacherProfilePage from './pages/teachers/TeacherProfilePage';
 import MatchTeacherPage from './pages/teachers/MatchTeacherPage';
+import MyTeachersPage from './pages/teachers/MyTeachersPage';
 import SettingsPage from './pages/settings/SettingsPage';
 import StudentsPage from './pages/students/StudentsPage';
 import ReviewsPage from './pages/reviews/ReviewsPage';
@@ -33,6 +34,7 @@ const REAL_PAGES = {
   '/lessons': <LessonsPage />,
   '/progress': <ProgressPage />,
   '/teachers': <TeachersPage />,
+  '/my-teachers': <MyTeachersPage />,
   '/match-teacher': <MatchTeacherPage />,
   '/settings': <SettingsPage />,
   '/students': <StudentsPage />,

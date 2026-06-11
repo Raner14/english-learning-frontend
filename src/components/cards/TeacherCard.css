@@ -148,3 +148,18 @@
   color: var(--color-success);
   cursor: default;
 }
+
+.teacher-card__btn--remove {
+  background: transparent;
+  color: var(--color-danger, #ef4444);
+  border: 1.5px solid var(--color-danger, #ef4444);
+}
+
+.teacher-card__btn--remove:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.teacher-card__btn--remove--loading {
+  opacity: 0.6;
+  cursor: default;
+}

@@ -11,7 +11,7 @@ function StarRating({ rank }) {
   );
 }
 
-function TeacherCard({ teacher, requestStatus = 'idle', onRequest }) {
+function TeacherCard({ teacher, requestStatus = 'idle', onRequest, onRemove, removeStatus = 'idle' }) {
   const navigate = useNavigate();
   const {
     teacherId,
@@ -79,14 +79,25 @@ function TeacherCard({ teacher, requestStatus = 'idle', onRequest }) {
         >
           View Profile
         </button>
-        <button
-          type="button"
-          className={`teacher-card__btn teacher-card__btn--primary${isButtonDisabled ? ' teacher-card__btn--disabled' : ''}`}
-          disabled={isButtonDisabled}
-          onClick={() => onRequest && onRequest(teacherId)}
-        >
-          {buttonLabel}
-        </button>
+        {onRemove ? (
+          <button
+            type="button"
+            className={`teacher-card__btn teacher-card__btn--remove${removeStatus === 'loading' ? ' teacher-card__btn--remove--loading' : ''}`}
+            disabled={removeStatus === 'loading'}
+            onClick={() => onRemove(teacherId)}
+          >
+            {removeStatus === 'loading' ? 'Removing...' : 'Remove Connection'}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`teacher-card__btn teacher-card__btn--primary${isButtonDisabled ? ' teacher-card__btn--disabled' : ''}`}
+            disabled={isButtonDisabled}
+            onClick={() => onRequest && onRequest(teacherId)}
+          >
+            {buttonLabel}
+          </button>
+        )}
       </div>
     </article>
   );
