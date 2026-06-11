@@ -101,6 +101,12 @@
   font-weight: 400;
 }
 
+/* ── Teacher name in history table ───────────────── */
+.progress-teacher-name {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
 /* ── View link button in history table ────────────── */
 .progress-link-btn {
   display: inline-block;

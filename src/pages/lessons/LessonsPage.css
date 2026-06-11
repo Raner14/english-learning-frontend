@@ -9,6 +9,42 @@
   color: var(--color-text-main);
 }
 
+/* ── Assessment banner ────────────────────────────── */
+.lessons-page__assessment-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1.5px solid var(--color-primary, #0ea5e9);
+}
+
+.lessons-page__assessment-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+
+.lessons-page__assessment-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #0369a1;
+  line-height: 1.6;
+}
+
+.lessons-page__assessment-link {
+  color: var(--color-primary, #0ea5e9);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lessons-page__assessment-link:hover {
+  color: var(--color-primary-dark, #0284c7);
+}
+
 /* ── Search bar ───────────────────────────────────── */
 .lessons-page__search-bar {
   display: flex;

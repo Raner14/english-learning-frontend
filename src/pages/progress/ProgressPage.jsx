@@ -35,6 +35,11 @@ const HISTORY_COLUMNS = [
     render: (v) => <ScorePill value={v} />,
   },
   {
+    key: 'teacherName',
+    label: 'Reviewed by',
+    render: (v) => v ? <span className="progress-teacher-name">{v}</span> : <span className="score-pill score-pill--none">—</span>,
+  },
+  {
     key: 'conversationId',
     label: '',
     render: (v) =>
@@ -59,7 +64,19 @@ function ProgressPage() {
     ])
       .then(([statsData, chartData]) => {
         setStats(statsData);
-        setHistory(chartData);
+        // Expand each conversation into one row per teacher review so they appear as separate entries
+        const expanded = chartData.flatMap((conv) => {
+          if (!conv.teacherReviews || conv.teacherReviews.length === 0) {
+            return [{ ...conv, id: String(conv.conversationId), teacherScore: null, teacherName: null }];
+          }
+          return conv.teacherReviews.map((r) => ({
+            ...conv,
+            id: `${conv.conversationId}-${r.teacherId}`,
+            teacherScore: r.teacherScore,
+            teacherName: r.teacherName,
+          }));
+        });
+        setHistory(expanded);
       })
       .catch((err) => {
         setError(err?.response?.data?.error?.message || 'Failed to load progress data.');
@@ -100,6 +117,7 @@ function ProgressPage() {
           data={history}
           emptyMessage="No completed conversations yet. Start a lesson to get your first score!"
         />
+
       </section>
 
       {stats.lastActivityDate && (

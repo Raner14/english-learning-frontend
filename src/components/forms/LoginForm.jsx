@@ -77,7 +77,7 @@ function LoginForm({ onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <div style={{ marginBottom: '1rem' }}>
         <Input
           label="Email"
@@ -86,6 +86,7 @@ function LoginForm({ onSubmit }) {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
+          autoComplete="off"
         />
       </div>
 
@@ -97,6 +98,7 @@ function LoginForm({ onSubmit }) {
           value={formData.password}
           onChange={handleChange}
           error={errors.password}
+          autoComplete="new-password"
         />
       </div>
 

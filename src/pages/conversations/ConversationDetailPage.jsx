@@ -80,11 +80,6 @@ function ConversationDetailPage() {
     setSubmitError('');
     try {
       await addTeacherComment(conversationId, score, teacherComment.trim());
-      setConversation((prev) => ({
-        ...prev,
-        teacherScore: score,
-        teacherComment: teacherComment.trim(),
-      }));
       setSubmitted(true);
     } catch (err) {
       setSubmitError(err?.response?.data?.error?.message || 'Failed to save review.');
@@ -117,6 +112,11 @@ function ConversationDetailPage() {
   const backPath = isTeacher ? '/conversations' : '/progress';
   const backLabel = isTeacher ? '← Back to Conversations' : '← Back to My Progress';
 
+  // For teacher view: find whether this teacher has already submitted a review
+  const myReview = isTeacher
+    ? (conversation?.teacherReviews || []).find((r) => String(r.userId) === String(user?.id))
+    : null;
+
   if (loadError) {
     return (
       <div className="conv-detail">
@@ -128,8 +128,9 @@ function ConversationDetailPage() {
     );
   }
 
-  const alreadyReviewed = conversation.teacherScore != null;
-  const showThread = alreadyReviewed || submitted;
+  const alreadyReviewed = myReview != null || submitted;
+  const hasAnyReview = (conversation.teacherReviews || []).length > 0;
+  const showThread = alreadyReviewed || hasAnyReview;
 
   return (
     <div className="conv-detail">
@@ -138,10 +139,18 @@ function ConversationDetailPage() {
       </button>
 
       <div className="conv-detail__meta">
-        {alreadyReviewed ? (
-          <span className="conv-detail__status conv-detail__status--done">Reviewed</span>
+        {isTeacher ? (
+          alreadyReviewed ? (
+            <span className="conv-detail__status conv-detail__status--done">Reviewed by you</span>
+          ) : (
+            <span className="conv-detail__status conv-detail__status--pending">Needs Your Review</span>
+          )
         ) : (
-          <span className="conv-detail__status conv-detail__status--pending">Awaiting Review</span>
+          hasAnyReview ? (
+            <span className="conv-detail__status conv-detail__status--done">Reviewed</span>
+          ) : (
+            <span className="conv-detail__status conv-detail__status--pending">Awaiting Review</span>
+          )
         )}
         <span className="conv-detail__ai-score">AI Score: <strong>{conversation.aiScore ?? '—'}</strong></span>
       </div>
@@ -163,13 +172,15 @@ function ConversationDetailPage() {
       {/* Teacher: review form or existing review */}
       {isTeacher && (
         <div className="conv-detail__review-section">
-          {(alreadyReviewed || submitted) ? (
+          {alreadyReviewed ? (
             <div className="conv-detail__existing-review">
               <h3 className="conv-detail__review-heading">Your Review</h3>
               <p className="conv-detail__review-score">
-                Score: <strong>{conversation.teacherScore}/100</strong>
+                Score: <strong>{submitted ? teacherScore : myReview?.teacherScore}/100</strong>
               </p>
-              <p className="conv-detail__review-comment">"{conversation.teacherComment}"</p>
+              <p className="conv-detail__review-comment">
+                "{submitted ? teacherComment.trim() : myReview?.teacherComment}"
+              </p>
               {submitted && (
                 <p className="conv-detail__save-success">Review saved successfully.</p>
               )}
@@ -224,19 +235,23 @@ function ConversationDetailPage() {
         </div>
       )}
 
-      {/* Student: teacher feedback */}
+      {/* Student: teacher feedback (one card per teacher review) */}
       {!isTeacher && (
         <div className="conv-detail__feedback-section">
-          {alreadyReviewed ? (
-            <div className="conv-detail__feedback">
-              <h3 className="conv-detail__feedback-heading">Teacher Feedback</h3>
-              <div className="conv-detail__feedback-score">
-                Teacher score: <strong>{conversation.teacherScore}/100</strong>
+          {hasAnyReview ? (
+            conversation.teacherReviews.map((review) => (
+              <div key={review.teacherId} className="conv-detail__feedback">
+                <h3 className="conv-detail__feedback-heading">
+                  Feedback from {review.teacherName || 'Teacher'}
+                </h3>
+                <div className="conv-detail__feedback-score">
+                  Score: <strong>{review.teacherScore}/100</strong>
+                </div>
+                {review.teacherComment && (
+                  <p className="conv-detail__feedback-comment">"{review.teacherComment}"</p>
+                )}
               </div>
-              {conversation.teacherComment && (
-                <p className="conv-detail__feedback-comment">"{conversation.teacherComment}"</p>
-              )}
-            </div>
+            ))
           ) : (
             conversation.status === 'completed' && (
               <p className="conv-detail__awaiting">

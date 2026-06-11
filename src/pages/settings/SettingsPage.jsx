@@ -70,6 +70,7 @@ function SettingsPage() {
   const navigate = useNavigate();
   const toast = useToast();
   const isTeacher = user?.role === 'teacher';
+  const isAdmin = user?.role === 'admin';
 
   const [pageLoading, setPageLoading] = useState(true);
   const [pageError, setPageError] = useState('');
@@ -444,37 +445,45 @@ function SettingsPage() {
           Permanently deletes your account and all associated data. This cannot be undone.
         </p>
 
-        {deleteError && (
-          <p className="settings-card__error" role="alert">{deleteError}</p>
-        )}
-
-        {!showDeleteConfirm ? (
-          <Button variant="danger" onClick={() => setShowDeleteConfirm(true)}>
-            Delete Account
+        {isAdmin ? (
+          <Button variant="danger" disabled title="Admin accounts cannot be deleted">
+            🔒 Delete Account
           </Button>
         ) : (
-          <div className="settings-delete-confirm">
-            <p className="settings-delete-confirm__prompt">
-              Are you sure? This action is permanent and cannot be undone.
-            </p>
-            <div className="settings-delete-confirm__actions">
-              <Button
-                variant="danger"
-                isLoading={deleting}
-                disabled={deleting}
-                onClick={handleDeleteAccount}
-              >
-                Yes, delete my account
+          <>
+            {deleteError && (
+              <p className="settings-card__error" role="alert">{deleteError}</p>
+            )}
+
+            {!showDeleteConfirm ? (
+              <Button variant="danger" onClick={() => setShowDeleteConfirm(true)}>
+                Delete Account
               </Button>
-              <Button
-                variant="primary"
-                disabled={deleting}
-                onClick={() => { setShowDeleteConfirm(false); setDeleteError(''); }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
+            ) : (
+              <div className="settings-delete-confirm">
+                <p className="settings-delete-confirm__prompt">
+                  Are you sure? This action is permanent and cannot be undone.
+                </p>
+                <div className="settings-delete-confirm__actions">
+                  <Button
+                    variant="danger"
+                    isLoading={deleting}
+                    disabled={deleting}
+                    onClick={handleDeleteAccount}
+                  >
+                    Yes, delete my account
+                  </Button>
+                  <Button
+                    variant="primary"
+                    disabled={deleting}
+                    onClick={() => { setShowDeleteConfirm(false); setDeleteError(''); }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </Card>
     </div>

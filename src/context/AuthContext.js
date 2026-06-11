@@ -6,7 +6,7 @@ const AUTH_STORAGE_KEY = 'authUser';
 const AuthContext = createContext(null);
 
 function getStoredUser() {
-  const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
+  const storedUser = sessionStorage.getItem(AUTH_STORAGE_KEY);
 
   if (!storedUser) {
     return null;
@@ -15,7 +15,7 @@ function getStoredUser() {
   try {
     return JSON.parse(storedUser);
   } catch {
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
     return null;
   }
 }
@@ -52,7 +52,7 @@ function AuthProvider({ children }) {
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+      sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
       setAuthSession({
         token: user.token,
         userId: user.id,
@@ -61,8 +61,9 @@ function AuthProvider({ children }) {
       return;
     }
 
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
     clearAuthSession();
+    document.documentElement.setAttribute('data-theme', 'light');
   }, [user]);
 
   useEffect(() => {

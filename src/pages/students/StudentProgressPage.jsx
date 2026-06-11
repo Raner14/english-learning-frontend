@@ -41,7 +41,19 @@ function StudentProgressPage() {
     ])
       .then(([progressData, convsData]) => {
         setProgress(progressData);
-        setConversations(convsData || []);
+        // Expand each conversation into one row per teacher review
+        const expanded = (convsData || []).flatMap((conv) => {
+          if (!conv.teacherReviews || conv.teacherReviews.length === 0) {
+            return [{ ...conv, rowKey: String(conv.conversationId), teacherScore: null, teacherName: null }];
+          }
+          return conv.teacherReviews.map((r) => ({
+            ...conv,
+            rowKey: `${conv.conversationId}-${r.teacherId}`,
+            teacherScore: r.teacherScore,
+            teacherName: r.teacherName,
+          }));
+        });
+        setConversations(expanded);
       })
       .catch((err) => setError(err?.response?.data?.error?.message || 'Failed to load student progress.'))
       .finally(() => setLoading(false));
@@ -98,6 +110,7 @@ function StudentProgressPage() {
                 <th>Lesson</th>
                 <th>AI Score</th>
                 <th>Teacher Score</th>
+                <th>Reviewed by</th>
                 <th>Status</th>
                 <th>Date</th>
                 <th></th>
@@ -105,7 +118,7 @@ function StudentProgressPage() {
             </thead>
             <tbody>
               {conversations.map((conv) => (
-                <tr key={conv.conversationId}>
+                <tr key={conv.rowKey}>
                   <td className="sp-conv__lesson">
                     {conv.lessonTitle || `Lesson #${conv.lessonId}`}
                   </td>
@@ -114,6 +127,9 @@ function StudentProgressPage() {
                   </td>
                   <td className="sp-conv__score">
                     {conv.teacherScore != null ? `${conv.teacherScore}/100` : '—'}
+                  </td>
+                  <td className="sp-conv__teacher-name">
+                    {conv.teacherName || '—'}
                   </td>
                   <td><StatusBadge status={conv.status} /></td>
                   <td className="sp-conv__date">{formatDate(conv.createdAt)}</td>

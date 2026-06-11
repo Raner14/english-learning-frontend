@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getLessonCatalog } from '../../services/lessonService';
+import { getProgressStats } from '../../services/progressService';
 import LessonCard from '../../components/cards/LessonCard';
 import PageLoader from '../../components/common/PageLoader';
 
@@ -13,19 +14,24 @@ function LessonCatalog() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  // null = not yet assessed; non-null = level is set; undefined = still loading / couldn't fetch
+  const [currentLevel, setCurrentLevel] = useState(undefined);
 
   useEffect(() => {
-    getLessonCatalog()
-      .then(setLessons)
-      .catch((err) => {
-        setError(err?.response?.data?.error?.message || 'Failed to load lessons.');
-      })
-      .finally(() => setLoading(false));
+    Promise.all([
+      getLessonCatalog(),
+      getProgressStats().catch(() => null),
+    ]).then(([lessonList, stats]) => {
+      setLessons(lessonList);
+      setCurrentLevel(stats != null ? stats.currentLevel : undefined);
+    }).catch((err) => {
+      setError(err?.response?.data?.error?.message || 'Failed to load lessons.');
+    }).finally(() => setLoading(false));
   }, []);
 
   const q = searchQuery.trim().toLowerCase();
   const levelFiltered = lessons.filter((l) => l.level === activeTab);
-  const visibleLessons = q
+  const filteredLessons = q
     ? levelFiltered.filter(
         (l) =>
           l.title.toLowerCase().includes(q) ||
@@ -34,6 +40,24 @@ function LessonCatalog() {
       )
     : levelFiltered;
 
+  // Inject locked state based on the student's assessed level.
+  // currentLevel === undefined  → stats failed to load, leave lessons unlocked
+  // currentLevel === null       → no assessment done yet, all lessons locked
+  // currentLevel === string     → only lessons at that level are unlocked
+  const visibleLessons = filteredLessons.map((lesson) => {
+    if (currentLevel === undefined) return lesson;
+    const locked = currentLevel === null || lesson.level !== currentLevel;
+    if (!locked) return lesson;
+    return {
+      ...lesson,
+      isLocked: true,
+      lockReason:
+        currentLevel === null
+          ? 'Complete the AI assessment to unlock lessons.'
+          : 'This level is not available at your current level.',
+    };
+  });
+
   if (loading) return <PageLoader text="Loading lessons..." />;
 
   const isFiltered = !!q;
@@ -41,6 +65,19 @@ function LessonCatalog() {
   return (
     <div className="lessons-page">
       <h1 className="lessons-page__title">Lesson Catalog</h1>
+
+      {currentLevel === null && (
+        <div className="lessons-page__assessment-banner">
+          <span className="lessons-page__assessment-icon">📊</span>
+          <p className="lessons-page__assessment-text">
+            We haven't determined your current English level yet.{' '}
+            <Link to="/assessment" className="lessons-page__assessment-link">
+              Click here
+            </Link>{' '}
+            to take an AI assessment and set your level.
+          </p>
+        </div>
+      )}
 
       <div className="lessons-page__search-bar">
         <input

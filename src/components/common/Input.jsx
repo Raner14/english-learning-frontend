@@ -1,6 +1,6 @@
 import './Input.css';
 
-function Input({ value, onChange, label, error, type = 'text', name }) {
+function Input({ value, onChange, label, error, type = 'text', name, autoComplete }) {
   const inputClassName = ['input-field', error ? 'input-field--error' : ''].filter(Boolean).join(' ');
 
   return (
@@ -11,6 +11,7 @@ function Input({ value, onChange, label, error, type = 'text', name }) {
         name={name}
         value={value}
         onChange={onChange}
+        autoComplete={autoComplete}
         aria-invalid={Boolean(error)}
         className={inputClassName}
       />

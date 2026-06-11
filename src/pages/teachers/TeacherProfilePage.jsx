@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTeacher } from '../../services/teacherService';
-import { requestTeacher } from '../../services/relationsService';
+import { requestTeacher, getMyRelations } from '../../services/relationsService';
+import { useAuth } from '../../context/AuthContext';
 import PageLoader from '../../components/common/PageLoader';
 import './TeacherProfilePage.css';
 
@@ -31,6 +32,8 @@ function InfoRow({ label, value }) {
 function TeacherProfilePage() {
   const { teacherId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const userRole = user?.role;
 
   const [teacher, setTeacher] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,13 +41,33 @@ function TeacherProfilePage() {
   const [requestStatus, setRequestStatus] = useState('idle');
 
   useEffect(() => {
-    getTeacher(teacherId)
-      .then(setTeacher)
-      .catch((err) => {
+    async function fetchData() {
+      try {
+        const teacherData = await getTeacher(teacherId);
+        setTeacher(teacherData);
+
+        if (userRole === 'student') {
+          try {
+            const relations = await getMyRelations();
+            const existing = relations.find(
+              (r) => String(r.teacherId) === String(teacherData.teacherId)
+            );
+            if (existing) {
+              setRequestStatus(existing.status === 'active' ? 'exists' : 'success');
+            }
+          } catch {
+            // silently ignore — button stays idle
+          }
+        }
+      } catch (err) {
         setError(err?.response?.data?.error?.message || 'Teacher not found.');
-      })
-      .finally(() => setLoading(false));
-  }, [teacherId]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [teacherId, userRole]);
 
   async function handleRequest() {
     setRequestStatus('loading');
@@ -141,16 +164,18 @@ function TeacherProfilePage() {
         </section>
       )}
 
-      <div className="teacher-profile__cta">
-        <button
-          type="button"
-          className={`teacher-profile__request-btn${isDisabled ? ' teacher-profile__request-btn--done' : ''}`}
-          disabled={isDisabled}
-          onClick={handleRequest}
-        >
-          {requestLabel}
-        </button>
-      </div>
+      {userRole === 'student' && (
+        <div className="teacher-profile__cta">
+          <button
+            type="button"
+            className={`teacher-profile__request-btn${isDisabled ? ' teacher-profile__request-btn--done' : ''}`}
+            disabled={isDisabled}
+            onClick={handleRequest}
+          >
+            {requestLabel}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

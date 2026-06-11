@@ -30,7 +30,9 @@ function LoginPage() {
       }
 
       login(token, userData);
-      navigate('/dashboard', { replace: true });
+      const destination =
+        justRegistered && userData.role === 'student' ? '/assessment' : '/dashboard';
+      navigate(destination, { replace: true });
     } catch (error) {
       setServerError(
         error?.response?.data?.error?.message || error.message || 'Login failed. Please try again.'
