@@ -1,0 +1,43 @@
+.flashcard {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 20px;
+  padding: 52px 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+  text-align: center;
+  min-height: 240px;
+  justify-content: center;
+}
+
+.flashcard__word {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--color-text-primary, #0f172a);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.flashcard__translation {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary, #0ea5e9);
+}
+
+.flashcard__example {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  color: var(--color-text-secondary, #64748b);
+  line-height: 1.65;
+  max-width: 480px;
+  font-style: italic;
+}
+
+.flashcard__highlight {
+  color: var(--color-text-primary, #0f172a);
+  font-style: normal;
+  font-weight: 800;
+}

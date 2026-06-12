@@ -1,0 +1,227 @@
+.conv-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.conv-stage--loading {
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.conv-stage__loading-text {
+  font-size: 0.95rem;
+  color: var(--color-text-muted, #94a3b8);
+}
+
+.conv-stage__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.conv-stage__back-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.88rem;
+  color: var(--color-primary, #0ea5e9);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.conv-stage__back-btn:hover { text-decoration: underline; }
+
+.conv-stage__ai-label {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary, #64748b);
+}
+
+.conv-stage__ai-label strong {
+  color: var(--color-text-primary, #0f172a);
+}
+
+.conv-stage__error {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--color-danger, #dc2626);
+}
+
+/* Two-column layout */
+.conv-stage__body {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .conv-stage__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Chat panel */
+.conv-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.conv-chat__window {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 280px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+
+.conv-msg {
+  display: flex;
+}
+
+.conv-msg--user { justify-content: flex-end; }
+.conv-msg--ai   { justify-content: flex-start; }
+
+.conv-msg__bubble {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 78%;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.conv-msg--user .conv-msg__bubble {
+  background: var(--color-primary, #0ea5e9);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.conv-msg--ai .conv-msg__bubble {
+  background: var(--color-bg-subtle, #f1f5f9);
+  color: var(--color-text-primary, #0f172a);
+  border-bottom-left-radius: 4px;
+}
+
+.conv-msg__bubble--thinking {
+  color: var(--color-text-secondary, #94a3b8);
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+
+.conv-chat__input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.conv-chat__input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #bae6fd;
+  background: #f0f9ff;
+  font-size: 0.93rem;
+  color: #0f172a;
+  outline: none;
+}
+
+.conv-chat__input:focus { border-color: var(--color-primary, #0ea5e9); }
+
+.conv-chat__send-btn {
+  padding: 10px 20px;
+  background: var(--color-primary, #0ea5e9);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.conv-chat__send-btn:disabled { background: #bae6fd; cursor: default; }
+
+.conv-chat__end-btn {
+  align-self: flex-end;
+  padding: 8px 18px;
+  background: none;
+  border: 1.5px solid var(--color-danger, #dc2626);
+  color: var(--color-danger, #dc2626);
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.conv-chat__end-btn:hover:not(:disabled) { background: #fef2f2; }
+.conv-chat__end-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Vocab tracker sidebar */
+.conv-vocab {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 20px;
+}
+
+.conv-vocab__section {
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.conv-vocab__heading {
+  margin: 0 0 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted, #94a3b8);
+}
+
+.conv-vocab__heading--used {
+  color: #16a34a;
+}
+
+.conv-vocab__all-done {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.conv-vocab__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.conv-vocab__chip {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f0f9ff;
+  color: var(--color-primary, #0ea5e9);
+  border: 1.5px solid #bae6fd;
+}
+
+.conv-vocab__chip--used {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #86efac;
+}

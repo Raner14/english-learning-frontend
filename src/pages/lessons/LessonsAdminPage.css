@@ -169,6 +169,107 @@
   background: var(--color-primary-bg);
 }
 
+/* ── Section separators inside the form ──────────── */
+.lessons-admin__section-title {
+  margin: 20px 0 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.lessons-admin__section-divider {
+  border-top: 1px solid var(--color-border);
+  padding-top: 20px;
+  margin-top: 8px;
+}
+
+.lessons-admin__section-hint {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* ── Vocabulary word cards ────────────────────────── */
+.lessons-admin__vocab-card {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--color-bg, #f8fafc);
+}
+
+.lessons-admin__vocab-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lessons-admin__vocab-num {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lessons-admin__vocab-remove {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: none;
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.lessons-admin__vocab-remove:hover {
+  background: var(--color-danger-bg);
+}
+
+.lessons-admin__vocab-add {
+  display: block;
+  width: 100%;
+  padding: 9px;
+  border-radius: 8px;
+  border: 1.5px dashed var(--color-border);
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  margin-bottom: 16px;
+}
+
+.lessons-admin__vocab-add:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+/* ── Notes inside the form ────────────────────────── */
+.lessons-admin__warmup-note,
+.lessons-admin__vocab-note {
+  margin-top: 4px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--color-primary-bg);
+  font-size: 0.85rem;
+  color: var(--color-text-main);
+  line-height: 1.55;
+}
+
+.lessons-admin__warmup-note a,
+.lessons-admin__vocab-note a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 /* ── Level badge ──────────────────────────────────── */
 .lessons-admin__level {
   display: inline-block;

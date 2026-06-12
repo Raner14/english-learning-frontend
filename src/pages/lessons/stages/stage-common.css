@@ -1,0 +1,150 @@
+/* Shared layout primitives used by all lesson stage components */
+
+.stage-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stage-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stage-back-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.88rem;
+  color: var(--color-primary, #0ea5e9);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.stage-back-btn:hover {
+  text-decoration: underline;
+}
+
+.stage-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stage-label {
+  display: inline-block;
+  background: var(--color-primary, #0ea5e9);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.stage-label--amber {
+  background: #f59e0b;
+}
+
+.stage-label--violet {
+  background: #7c3aed;
+}
+
+.stage-label--green {
+  background: #16a34a;
+}
+
+.stage-label--indigo {
+  background: #4f46e5;
+}
+
+.stage-progress {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #94a3b8);
+  font-weight: 600;
+}
+
+.stage-track {
+  height: 4px;
+  background: var(--color-border, #e2e8f0);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: -12px;
+}
+
+.stage-track-fill {
+  height: 100%;
+  background: var(--color-primary, #0ea5e9);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.stage-track-fill--amber  { background: #f59e0b; }
+.stage-track-fill--violet { background: #7c3aed; }
+.stage-track-fill--green  { background: #16a34a; }
+.stage-track-fill--indigo { background: #4f46e5; }
+
+.stage-arrows-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stage-arrow-slot {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-arrow {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-surface, #fff);
+  border: 2px solid var(--color-border, #e2e8f0);
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-primary, #0f172a);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.stage-arrow:hover {
+  background: #f0f9ff;
+  border-color: var(--color-primary, #0ea5e9);
+  color: var(--color-primary, #0ea5e9);
+}
+
+.stage-cta-btn {
+  align-self: center;
+  padding: 13px 32px;
+  background: var(--color-primary, #0ea5e9);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.stage-cta-btn:hover { background: #0284c7; }
+.stage-cta-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.stage-cta-btn--amber  { background: #f59e0b; }
+.stage-cta-btn--amber:hover  { background: #d97706; }
+.stage-cta-btn--violet { background: #7c3aed; }
+.stage-cta-btn--violet:hover { background: #6d28d9; }
+.stage-cta-btn--green  { background: #16a34a; }
+.stage-cta-btn--green:hover  { background: #15803d; }
+.stage-cta-btn--indigo { background: #4f46e5; }
+.stage-cta-btn--indigo:hover { background: #4338ca; }

@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllLessons, createLesson, updateLesson, deleteLesson } from '../../services/lessonService';
+import {
+  getAllLessons,
+  createLesson,
+  createLessonVocabItem,
+  updateLesson,
+  deleteLesson,
+} from '../../services/lessonService';
 import { getAllGrammarRules } from '../../services/grammarService';
 import PageLoader from '../../components/common/PageLoader';
 import { useToast } from '../../context/ToastContext';
@@ -14,13 +20,21 @@ const LEVEL_CLASS = {
   Advanced: 'lessons-admin__level--advanced',
 };
 
+const BLANK_VOCAB_WORD = {
+  word: '',
+  translation: '',
+  definition: '',
+  example: '',
+  completeSentence: '',
+};
+
 const BLANK_FORM = {
   title: '',
   scene: '',
   aiRole: '',
   level: 'Beginner',
   grammarRuleId: '',
-  vocabularyId: '',
+  vocabWords: [{ ...BLANK_VOCAB_WORD }],
 };
 
 function lessonToForm(lesson) {
@@ -30,7 +44,6 @@ function lessonToForm(lesson) {
     aiRole: lesson.aiRole || '',
     level: lesson.level || 'Beginner',
     grammarRuleId: lesson.grammarRuleId || '',
-    vocabularyId: lesson.vocabularyId !== undefined ? String(lesson.vocabularyId) : '',
   };
 }
 
@@ -49,7 +62,7 @@ function LessonsAdminPage() {
 
   // Form state
   const [showForm, setShowForm] = useState(false);
-  const [editLesson, setEditLesson] = useState(null); // null = create, object = edit
+  const [editLesson, setEditLesson] = useState(null);
   const [formData, setFormData] = useState(BLANK_FORM);
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -93,31 +106,99 @@ function LessonsAdminPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
 
+  function addVocabWord() {
+    setFormData((prev) => ({
+      ...prev,
+      vocabWords: [...prev.vocabWords, { ...BLANK_VOCAB_WORD }],
+    }));
+  }
+
+  function removeVocabWord(i) {
+    setFormData((prev) => ({
+      ...prev,
+      vocabWords: prev.vocabWords.filter((_, idx) => idx !== i),
+    }));
+  }
+
+  function handleVocabWordChange(i, field, value) {
+    setFormData((prev) => ({
+      ...prev,
+      vocabWords: prev.vocabWords.map((w, idx) => (idx === i ? { ...w, [field]: value } : w)),
+    }));
+  }
+
   async function handleFormSubmit(e) {
     e.preventDefault();
     setFormError('');
+
+    if (!editLesson) {
+      const filled = formData.vocabWords.filter((w) => w.word.trim());
+      if (filled.length === 0) {
+        setFormError('Please add at least one vocabulary word.');
+        return;
+      }
+      const incomplete = filled.find(
+        (w) =>
+          !w.translation.trim() ||
+          !w.definition.trim() ||
+          !w.example.trim() ||
+          !w.completeSentence.trim()
+      );
+      if (incomplete) {
+        setFormError(`All 5 fields are required for the word "${incomplete.word}".`);
+        return;
+      }
+    }
+
     setSubmitting(true);
 
-    const payload = {
-      ...formData,
-      vocabularyId: Number(formData.vocabularyId),
+    const lessonPayload = {
+      title: formData.title,
+      scene: formData.scene,
+      aiRole: formData.aiRole,
+      level: formData.level,
+      grammarRuleId: formData.grammarRuleId,
+      vocabularyId: editLesson ? editLesson.vocabularyId : 0,
     };
 
     try {
       if (editLesson) {
-        await updateLesson(editLesson.lessonId, payload);
+        await updateLesson(editLesson.lessonId, lessonPayload);
         setLessons((prev) =>
           prev.map((l) =>
-            l.lessonId === editLesson.lessonId ? { ...l, ...payload } : l
+            l.lessonId === editLesson.lessonId ? { ...l, ...lessonPayload } : l
           )
         );
         toast('Lesson updated.');
+        closeForm();
       } else {
-        const created = await createLesson(payload);
+        const created = await createLesson(lessonPayload);
         setLessons((prev) => [...prev, created]);
-        toast('Lesson created.');
+
+        const words = formData.vocabWords.filter((w) => w.word.trim());
+        let vocabFailed = false;
+        for (const w of words) {
+          try {
+            await createLessonVocabItem(created.lessonId, {
+              word: w.word.trim(),
+              translation: w.translation.trim(),
+              definition: w.definition.trim(),
+              example: w.example.trim(),
+              completeSentence: w.completeSentence.trim(),
+            });
+          } catch {
+            vocabFailed = true;
+            break;
+          }
+        }
+
+        if (vocabFailed) {
+          toast(`Lesson #${created.lessonId} created. Some words failed — add them from the Vocab page.`);
+        } else {
+          toast(`Lesson #${created.lessonId} created with ${words.length} vocabulary word${words.length !== 1 ? 's' : ''}.`);
+        }
+        closeForm();
       }
-      closeForm();
     } catch (err) {
       setFormError(err?.response?.data?.error?.message || 'Failed to save lesson.');
     } finally {
@@ -175,6 +256,8 @@ function LessonsAdminPage() {
             {editLesson ? `Edit Lesson #${editLesson.lessonId}` : 'New Lesson'}
           </h2>
 
+          {/* ── Lesson details ── */}
+          <p className="lessons-admin__section-title">Lesson Details</p>
           <div className="lessons-admin__form-grid">
             <div className="lessons-admin__field">
               <label className="lessons-admin__label">Title</label>
@@ -183,6 +266,7 @@ function LessonsAdminPage() {
                 className="lessons-admin__input"
                 value={formData.title}
                 onChange={(e) => handleFieldChange('title', e.target.value)}
+                placeholder="e.g. The Technical Interview"
                 required
                 maxLength={120}
               />
@@ -195,6 +279,7 @@ function LessonsAdminPage() {
                 className="lessons-admin__input"
                 value={formData.aiRole}
                 onChange={(e) => handleFieldChange('aiRole', e.target.value)}
+                placeholder="e.g. Technical Team Lead"
                 required
                 maxLength={80}
               />
@@ -241,18 +326,6 @@ function LessonsAdminPage() {
               )}
             </div>
 
-            <div className="lessons-admin__field">
-              <label className="lessons-admin__label">Vocabulary ID</label>
-              <input
-                type="number"
-                className="lessons-admin__input"
-                value={formData.vocabularyId}
-                onChange={(e) => handleFieldChange('vocabularyId', e.target.value)}
-                min={1}
-                required
-              />
-            </div>
-
             <div className="lessons-admin__field lessons-admin__field--full">
               <label className="lessons-admin__label">Scene</label>
               <textarea
@@ -260,11 +333,119 @@ function LessonsAdminPage() {
                 value={formData.scene}
                 onChange={(e) => handleFieldChange('scene', e.target.value)}
                 rows={3}
+                placeholder="Describe the conversation scenario the student will practice in…"
                 required
                 maxLength={400}
               />
             </div>
           </div>
+
+          {/* ── Vocabulary section (create only) ── */}
+          {!editLesson && (
+            <>
+              <div className="lessons-admin__section-divider">
+                <p className="lessons-admin__section-title">Vocabulary Words</p>
+                <p className="lessons-admin__section-hint">
+                  Add the words students will study in this lesson. At least one word is required.
+                  Each word needs all five fields.
+                </p>
+              </div>
+
+              {formData.vocabWords.map((word, i) => (
+                <div key={i} className="lessons-admin__vocab-card">
+                  <div className="lessons-admin__vocab-card-header">
+                    <span className="lessons-admin__vocab-num">Word {i + 1}</span>
+                    {formData.vocabWords.length > 1 && (
+                      <button
+                        type="button"
+                        className="lessons-admin__vocab-remove"
+                        onClick={() => removeVocabWord(i)}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <div className="lessons-admin__form-grid">
+                    <div className="lessons-admin__field">
+                      <label className="lessons-admin__label">Word</label>
+                      <input
+                        type="text"
+                        className="lessons-admin__input"
+                        value={word.word}
+                        onChange={(e) => handleVocabWordChange(i, 'word', e.target.value)}
+                        placeholder="e.g. negotiate"
+                      />
+                    </div>
+                    <div className="lessons-admin__field">
+                      <label className="lessons-admin__label">Translation (Hebrew)</label>
+                      <input
+                        type="text"
+                        className="lessons-admin__input"
+                        value={word.translation}
+                        onChange={(e) => handleVocabWordChange(i, 'translation', e.target.value)}
+                        placeholder="e.g. לנהל משא ומתן"
+                      />
+                    </div>
+                    <div className="lessons-admin__field lessons-admin__field--full">
+                      <label className="lessons-admin__label">Definition</label>
+                      <input
+                        type="text"
+                        className="lessons-admin__input"
+                        value={word.definition}
+                        onChange={(e) => handleVocabWordChange(i, 'definition', e.target.value)}
+                        placeholder="A brief definition of the word in English"
+                      />
+                    </div>
+                    <div className="lessons-admin__field lessons-admin__field--full">
+                      <label className="lessons-admin__label">Example sentence</label>
+                      <input
+                        type="text"
+                        className="lessons-admin__input"
+                        value={word.example}
+                        onChange={(e) => handleVocabWordChange(i, 'example', e.target.value)}
+                        placeholder="e.g. We negotiated a new deal with the client."
+                      />
+                    </div>
+                    <div className="lessons-admin__field lessons-admin__field--full">
+                      <label className="lessons-admin__label">
+                        Complete sentence — use <code>________</code> (8 underscores) for the blank
+                      </label>
+                      <input
+                        type="text"
+                        className="lessons-admin__input"
+                        value={word.completeSentence}
+                        onChange={(e) => handleVocabWordChange(i, 'completeSentence', e.target.value)}
+                        placeholder="e.g. We ________ a new deal with the client."
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                className="lessons-admin__vocab-add"
+                onClick={addVocabWord}
+              >
+                + Add Another Word
+              </button>
+
+              <div className="lessons-admin__warmup-note">
+                <strong>Grammar Warmup:</strong> Warmup exercises are shared by grammar rule. If the
+                rule you selected already has exercises, students will see them automatically. If you
+                created a brand-new rule, add its exercises later via the{' '}
+                <Link to="/exercises">Warm-Up Exercises</Link> page.
+              </div>
+            </>
+          )}
+
+          {/* ── Edit mode: vocab managed separately ── */}
+          {editLesson && (
+            <div className="lessons-admin__vocab-note">
+              <strong>Vocabulary</strong> — to add, edit, or remove words for this lesson, use the{' '}
+              <Link to={`/lessons/${editLesson.lessonId}/vocab`}>Vocabulary page</Link>.
+            </div>
+          )}
 
           {formError && <p className="lessons-admin__form-error">{formError}</p>}
 
