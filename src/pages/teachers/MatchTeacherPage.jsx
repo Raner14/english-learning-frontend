@@ -88,7 +88,9 @@ function MatchTeacherPage() {
         }),
         getMyRelations(),
       ]);
-      setRecommendations((results || []).slice().sort((a, b) => b.rank - a.rank));
+      // When AI is active, results arrive pre-sorted by matchScore; trust that order.
+      // In mock mode, matchScore is also present, so matchScore DESC is always the right sort.
+      setRecommendations((results || []).slice().sort((a, b) => (b.matchScore ?? b.rank) - (a.matchScore ?? a.rank)));
       const initial = {};
       myRelations.forEach((r) => {
         initial[r.teacherId] = r.status === 'active' ? 'exists' : 'success';
@@ -299,6 +301,10 @@ function MatchTeacherPage() {
                         <span key={s} className="match-card__tag">{s}</span>
                       ))}
                     </div>
+                  )}
+
+                  {rec.matchReason && (
+                    <p className="match-card__reason">{rec.matchReason}</p>
                   )}
 
                   <div className="match-card__actions">
