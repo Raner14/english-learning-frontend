@@ -19,9 +19,12 @@ function ConversationStage({ lesson, vocab, onEnd, onBack }) {
       .then((data) => {
         setConversationId(data.conversationId);
         setToUseWords(data.unusedVocab || []);
+        // Use the AI-generated opening message when available; fall back to hardcoded greeting
+        // when AI is not yet configured (backend returns an empty messages array)
+        const firstMsg = data.messages?.[0];
         setMessages([{
           role: 'ai',
-          content: `Hi! I'm your ${lesson.aiRole || 'AI partner'}. ${lesson.scene || ''} Let's begin!`,
+          content: firstMsg?.content || `Hi! I'm your ${lesson.aiRole || 'AI partner'}. ${lesson.scene || ''} Let's begin!`,
         }]);
       })
       .catch((err) => {
