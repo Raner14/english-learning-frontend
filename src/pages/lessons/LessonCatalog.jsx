@@ -40,13 +40,16 @@ function LessonCatalog() {
       )
     : levelFiltered;
 
-  // Inject locked state based on the student's assessed level.
+  const LEVEL_ORDER = { Beginner: 1, Intermediate: 2, Advanced: 3 };
+
   // currentLevel === undefined  → stats failed to load, leave lessons unlocked
   // currentLevel === null       → no assessment done yet, all lessons locked
-  // currentLevel === string     → only lessons at that level are unlocked
+  // currentLevel === string     → lessons at student's level or below are unlocked
   const visibleLessons = filteredLessons.map((lesson) => {
     if (currentLevel === undefined) return lesson;
-    const locked = currentLevel === null || lesson.level !== currentLevel;
+    const studentRank = currentLevel ? (LEVEL_ORDER[currentLevel] ?? 0) : 0;
+    const lessonRank = LEVEL_ORDER[lesson.level] ?? 99;
+    const locked = currentLevel === null || lessonRank > studentRank;
     if (!locked) return lesson;
     return {
       ...lesson,
@@ -54,7 +57,7 @@ function LessonCatalog() {
       lockReason:
         currentLevel === null
           ? 'Complete the AI assessment to unlock lessons.'
-          : 'This level is not available at your current level.',
+          : `This lesson requires ${lesson.level} level or above.`,
     };
   });
 
