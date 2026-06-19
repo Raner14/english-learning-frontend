@@ -57,6 +57,7 @@ function AuthProvider({ children }) {
         token: user.token,
         userId: user.id,
         userRole: user.role,
+        userName: [user.firstName, user.lastName].filter(Boolean).join(' ') || null,
       });
       return;
     }

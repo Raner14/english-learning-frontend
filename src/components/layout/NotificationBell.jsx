@@ -6,11 +6,9 @@ function getNotificationText(notification) {
   const { event, data } = notification;
   switch (event) {
     case 'conversation:new-reply':
-      return data.from === 'teacher'
-        ? 'A teacher replied to your conversation'
-        : 'A student replied to your conversation';
+      return `${data.senderName || 'Someone'} replied to your conversation`;
     case 'conversation:completed':
-      return `Student #${data.studentId} completed a conversation (Score: ${data.aiScore})`;
+      return `${data.studentName || 'A student'} completed a conversation (Score: ${data.aiScore})`;
     case 'relation:accepted':
       return `${data.teacherName} accepted your connection request!`;
     default:

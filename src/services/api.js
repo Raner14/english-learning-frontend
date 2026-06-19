@@ -17,6 +17,7 @@ function setAuthSession(session) {
 		token: session.token || null,
 		userId: session.userId || null,
 		userRole: session.userRole || null,
+		userName: session.userName || null,
 	};
 }
 
@@ -34,6 +35,7 @@ api.interceptors.request.use((config) => {
 			...config.headers,
 			...(authSession.userRole ? { 'x-user-role': authSession.userRole } : {}),
 			...(authSession.userId ? { 'x-user-id': String(authSession.userId) } : {}),
+			...(authSession.userName ? { 'x-user-name': authSession.userName } : {}),
 			...(authSession.token ? { Authorization: `Bearer ${authSession.token}` } : {}),
 		};
 	}

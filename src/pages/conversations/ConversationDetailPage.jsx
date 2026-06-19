@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { getConversation, addTeacherComment, replyToConversation } from '../../services/conversationService';
+import { getUser } from '../../services/userService';
 import PageLoader from '../../components/common/PageLoader';
 import './ConversationDetailPage.css';
 
@@ -32,7 +33,7 @@ function ConversationDetailPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const { isUserOnline } = useSocket();
+  const { isUserOnline, socket } = useSocket();
 
   const [conversation, setConversation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,18 +51,48 @@ function ConversationDetailPage() {
   const [replyText, setReplyText] = useState('');
   const [replySubmitting, setReplySubmitting] = useState(false);
   const [replyError, setReplyError] = useState('');
+  const [otherPartyName, setOtherPartyName] = useState('');
+  const [otherPartyId, setOtherPartyId] = useState(null);
 
   const threadEndRef = useRef(null);
 
   useEffect(() => {
     getConversation(conversationId)
-      .then((data) => {
+      .then(async (data) => {
         setConversation(data);
         setReplies(data.replies || []);
+
+        // Resolve the other party's name for the online indicator
+        const isTeacherRole = user?.role === 'teacher';
+        if (isTeacherRole && data.studentId) {
+          setOtherPartyId(data.studentId);
+          try {
+            const studentData = await getUser(data.studentId);
+            setOtherPartyName(`${studentData.firstName} ${studentData.lastName}`);
+          } catch { setOtherPartyName(`Student #${data.studentId}`); }
+        } else if (data.teacherReviews?.[0]) {
+          setOtherPartyId(data.teacherReviews[0].userId);
+          setOtherPartyName(data.teacherReviews[0].teacherName || 'Teacher');
+        }
       })
       .catch((err) => setLoadError(err?.response?.data?.error?.message || 'Failed to load conversation.'))
       .finally(() => setLoading(false));
-  }, [conversationId]);
+  }, [conversationId, user?.role]);
+
+  // Listen for real-time replies from the other party via WebSocket
+  useEffect(() => {
+    if (!socket) return;
+    function handleNewReply(data) {
+      if (String(data.conversationId) === String(conversationId)) {
+        const senderRole = data.from === 'teacher' ? 'teacher' : 'student';
+        if (senderRole !== user.role) {
+          setReplies((prev) => [...prev, { role: senderRole, content: data.message }]);
+        }
+      }
+    }
+    socket.on('conversation:new-reply', handleNewReply);
+    return () => socket.off('conversation:new-reply', handleNewReply);
+  }, [socket, conversationId, user.role]);
 
   useEffect(() => {
     threadEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -142,22 +173,12 @@ function ConversationDetailPage() {
       </button>
 
       <div className="conv-detail__meta">
-        {(() => {
-          const otherPartyId = isTeacher
-            ? conversation.studentId
-            : conversation.teacherReviews?.[0]?.userId;
-          const otherPartyName = isTeacher
-            ? `Student #${conversation.studentId}`
-            : conversation.teacherReviews?.[0]?.teacherName || 'Teacher';
-          const online = otherPartyId && isUserOnline(otherPartyId);
-
-          return otherPartyId ? (
-            <span className="conv-detail__online-status">
-              <span className={`conv-detail__dot conv-detail__dot--${online ? 'online' : 'offline'}`} />
-              {otherPartyName} — {online ? 'Online' : 'Offline'}
-            </span>
-          ) : null;
-        })()}
+        {otherPartyId && (
+          <span className="conv-detail__online-status">
+            <span className={`conv-detail__dot conv-detail__dot--${isUserOnline(otherPartyId) ? 'online' : 'offline'}`} />
+            {otherPartyName} — {isUserOnline(otherPartyId) ? 'Online' : 'Offline'}
+          </span>
+        )}
         {isTeacher ? (
           alreadyReviewed ? (
             <span className="conv-detail__status conv-detail__status--done">Reviewed by you</span>
