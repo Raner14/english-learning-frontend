@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useSocket } from '../../context/SocketContext';
 import { getConversation, addTeacherComment, replyToConversation } from '../../services/conversationService';
 import PageLoader from '../../components/common/PageLoader';
 import './ConversationDetailPage.css';
@@ -30,6 +31,8 @@ function ConversationDetailPage() {
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const { isUserOnline } = useSocket();
 
   const [conversation, setConversation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -139,6 +142,22 @@ function ConversationDetailPage() {
       </button>
 
       <div className="conv-detail__meta">
+        {(() => {
+          const otherPartyId = isTeacher
+            ? conversation.studentId
+            : conversation.teacherReviews?.[0]?.userId;
+          const otherPartyName = isTeacher
+            ? `Student #${conversation.studentId}`
+            : conversation.teacherReviews?.[0]?.teacherName || 'Teacher';
+          const online = otherPartyId && isUserOnline(otherPartyId);
+
+          return otherPartyId ? (
+            <span className="conv-detail__online-status">
+              <span className={`conv-detail__dot conv-detail__dot--${online ? 'online' : 'offline'}`} />
+              {otherPartyName} — {online ? 'Online' : 'Offline'}
+            </span>
+          ) : null;
+        })()}
         {isTeacher ? (
           alreadyReviewed ? (
             <span className="conv-detail__status conv-detail__status--done">Reviewed by you</span>

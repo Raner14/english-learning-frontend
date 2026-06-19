@@ -4,6 +4,29 @@
   padding: 2rem 1.5rem;
 }
 
+.conv-detail__online-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.conv-detail__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.conv-detail__dot--online {
+  background-color: #22c55e;
+}
+
+.conv-detail__dot--offline {
+  background-color: #9ca3af;
+}
+
 .conv-detail__back {
   background: none;
   border: none;

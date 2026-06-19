@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { getMe } from '../../services/userService';
 import { logout as logoutRequest } from '../../services/authService';
 import { getLinksByRole } from '../../config/roleNavigation';
+import NotificationBell from './NotificationBell';
 import './Navbar.css';
 
 function Navbar() {
@@ -64,6 +65,7 @@ function Navbar() {
         </nav>
 
         <div className="navbar__user-area">
+          <NotificationBell />
           {userRole && <span className="navbar__role-badge">{userRole}</span>}
           {displayName && <span className="navbar__username">Hello, {displayName}</span>}
           <button type="button" className="navbar__logout-button" onClick={handleLogout}>
