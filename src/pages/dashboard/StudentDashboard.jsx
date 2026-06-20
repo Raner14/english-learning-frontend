@@ -54,9 +54,9 @@ function StudentDashboard() {
           <button
             type="button"
             className="dashboard__cta-button"
-            onClick={() => navigate('/lessons')}
+            onClick={() => navigate(`/lessons/${nextLesson.lessonId}`)}
           >
-            Go to Lessons
+            Start: {nextLesson.title}
           </button>
         </Card>
       )}
