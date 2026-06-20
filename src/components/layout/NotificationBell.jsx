@@ -13,6 +13,8 @@ function getNotificationText(notification) {
       return `${data.teacherName} reviewed your conversation on "${data.lessonTitle}" (Score: ${data.teacherScore})`;
     case 'relation:accepted':
       return `${data.teacherName} accepted your connection request!`;
+    case 'relation:requested':
+      return `${data.studentName} wants you to teach them!`;
     default:
       return 'New notification';
   }

@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { getMyStudents, getPendingRequests, updateRelationStatus } from '../../services/relationsService';
 import { getMyReviews } from '../../services/teacherService';
+import { useSocket } from '../../context/SocketContext';
 import StatCard from '../../components/common/StatCard';
 import Card from '../../components/Card';
 import Button from '../../components/common/Button';
 import Loader from '../../components/common/Loader';
 
 function TeacherDashboard() {
+  const { socket } = useSocket();
   const [activeCount, setActiveCount] = useState(0);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [avgRating, setAvgRating] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  // Track which relation IDs are currently being accepted/rejected
   const [actionLoading, setActionLoading] = useState({});
 
   useEffect(() => {
@@ -27,6 +28,25 @@ function TeacherDashboard() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  // Real-time: add new student request to the list without refresh
+  useEffect(() => {
+    if (!socket) return;
+    function handleNewRequest(data) {
+      setPendingRequests((prev) => {
+        if (prev.some((r) => r.relationId === data.relationId)) return prev;
+        return [...prev, {
+          relationId: data.relationId,
+          studentId: data.studentId,
+          firstName: data.studentName?.split(' ')[0] || 'Student',
+          lastName: data.studentName?.split(' ').slice(1).join(' ') || '',
+          createdAt: new Date().toISOString(),
+        }];
+      });
+    }
+    socket.on('relation:requested', handleNewRequest);
+    return () => socket.off('relation:requested', handleNewRequest);
+  }, [socket]);
 
   async function handleAction(relationId, status) {
     setActionLoading((prev) => ({ ...prev, [relationId]: true }));
