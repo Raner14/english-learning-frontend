@@ -43,6 +43,7 @@ function SocketProvider({ children }) {
     const notificationEvents = [
       'conversation:new-reply',
       'conversation:completed',
+      'conversation:reviewed',
       'relation:accepted',
     ];
 

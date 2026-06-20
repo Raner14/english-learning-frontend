@@ -9,6 +9,8 @@ function getNotificationText(notification) {
       return `${data.senderName || 'Someone'} replied to your conversation`;
     case 'conversation:completed':
       return `${data.studentName || 'A student'} completed a conversation (Score: ${data.aiScore})`;
+    case 'conversation:reviewed':
+      return `${data.teacherName} reviewed your conversation on "${data.lessonTitle}" (Score: ${data.teacherScore})`;
     case 'relation:accepted':
       return `${data.teacherName} accepted your connection request!`;
     default:

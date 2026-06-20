@@ -46,7 +46,23 @@ function StudentDashboard() {
         <StatCard title="Avg Score" value={stats.overallAverage} subtitle="out of 100" />
       </div>
 
-      {nextLesson && (
+      {!stats.currentLevel ? (
+        <Card className="dashboard__highlight-card">
+          <p className="dashboard__section-label">Get Started</p>
+          <p className="dashboard__highlight-title">Take Your Level Assessment</p>
+          <p className="dashboard__highlight-sub">
+            Before we can recommend lessons for you, we need to determine your English level.
+            Complete a short AI-powered assessment to unlock personalized lesson recommendations.
+          </p>
+          <button
+            type="button"
+            className="dashboard__cta-button"
+            onClick={() => navigate('/assessment')}
+          >
+            Start Assessment
+          </button>
+        </Card>
+      ) : nextLesson ? (
         <Card className="dashboard__highlight-card">
           <p className="dashboard__section-label">Recommended Next Lesson</p>
           <p className="dashboard__highlight-title">{nextLesson.title}</p>
@@ -59,7 +75,7 @@ function StudentDashboard() {
             Start: {nextLesson.title}
           </button>
         </Card>
-      )}
+      ) : null}
 
       {stats.lastActivityDate && (
         <p className="dashboard__last-activity">
