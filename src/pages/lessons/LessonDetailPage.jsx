@@ -46,6 +46,7 @@ function EndedView({ result, onBack }) {
   );
 }
 
+/** Orchestrates a multi-stage lesson flow: flashcards, vocab quiz, definition matching, grammar, and AI conversation. */
 function LessonDetailPage() {
   const { lessonId } = useParams();
   const navigate = useNavigate();

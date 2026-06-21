@@ -4,6 +4,29 @@
   padding: 2rem 1.5rem;
 }
 
+.conv-detail__online-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.conv-detail__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.conv-detail__dot--online {
+  background-color: #22c55e;
+}
+
+.conv-detail__dot--offline {
+  background-color: #9ca3af;
+}
+
 .conv-detail__back {
   background: none;
   border: none;
@@ -288,7 +311,7 @@
   margin: 0;
 }
 
-/* Reply thread */
+/* Chat-style discussion thread */
 .conv-detail__thread {
   border-top: 1.5px solid var(--color-border);
   padding-top: 1.5rem;
@@ -299,27 +322,39 @@
   font-size: 1rem;
   font-weight: 700;
   color: var(--color-text-primary);
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
 }
 
 .conv-detail__thread-empty {
   color: var(--color-text-muted);
   font-size: 0.88rem;
   margin: 0 0 1rem;
+  text-align: center;
 }
 
 .conv-thread__list {
+  background: var(--color-bg-subtle);
+  border-radius: 12px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  margin-bottom: 1.25rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .conv-thread__msg {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  max-width: 72%;
+  gap: 0.1rem;
+  max-width: 75%;
+  animation: chatFadeIn 0.2s ease-out;
+}
+
+@keyframes chatFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .conv-thread__msg--own {
@@ -333,57 +368,61 @@
 }
 
 .conv-thread__role {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  padding: 0 0.3rem;
 }
 
 .conv-thread__bubble {
   margin: 0;
-  padding: 0.55rem 0.85rem;
-  border-radius: 12px;
+  padding: 0.6rem 0.9rem;
+  border-radius: 16px;
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.45;
+  word-break: break-word;
 }
 
 .conv-thread__msg--own .conv-thread__bubble {
   background: var(--color-primary);
   color: #fff;
-  border-bottom-right-radius: 3px;
+  border-bottom-right-radius: 4px;
 }
 
 .conv-thread__msg--other .conv-thread__bubble {
   background: var(--color-surface);
   color: var(--color-text-main);
   border: 1px solid var(--color-border);
-  border-bottom-left-radius: 3px;
+  border-bottom-left-radius: 4px;
 }
 
 .conv-thread__form {
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
   gap: 0.5rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 12px;
+  padding: 0.5rem;
 }
 
 .conv-thread__input {
-  width: 100%;
-  padding: 0.6rem 0.85rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface);
+  flex: 1;
+  padding: 0.5rem 0.7rem;
+  border: none;
+  background: transparent;
   color: var(--color-text-main);
   font-size: 0.9rem;
   resize: none;
   font-family: inherit;
   box-sizing: border-box;
-  transition: border-color 0.15s;
+  outline: none;
 }
 
-.conv-thread__input:focus {
-  outline: none;
-  border-color: var(--color-primary);
+.conv-thread__input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .conv-thread__error {
@@ -393,15 +432,15 @@
 }
 
 .conv-thread__send-btn {
-  align-self: flex-end;
   background: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 0.55rem 1.2rem;
-  font-size: 0.88rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
+  white-space: nowrap;
   transition: background 0.15s;
 }
 
@@ -412,4 +451,15 @@
 .conv-thread__send-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.conv-thread__disconnected {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  padding: 0.85rem 1rem;
+  background: var(--color-surface);
+  border-radius: 10px;
+  border: 1px dashed var(--color-border);
+  text-align: center;
+  margin-top: 0.5rem;
 }

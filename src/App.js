@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
+import { SocketProvider } from './context/SocketContext';
 import PlaceholderView from './components/common/PlaceholderView';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -50,8 +51,9 @@ const REAL_PAGES = {
 
 function App() {
   return (
-    <ToastProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <ToastProvider>
+      <SocketProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -81,8 +83,9 @@ function App() {
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Routes>
-      </BrowserRouter>
-    </ToastProvider>
+      </SocketProvider>
+      </ToastProvider>
+    </BrowserRouter>
   );
 }
 

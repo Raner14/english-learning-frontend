@@ -9,7 +9,19 @@ const INITIAL_FORM = {
   password: '',
   userRole: 'student',
   sex: 'male',
+  mainGoal: 'general_english',
+  learning_goal: '',
+  onlineOnly: false,
 };
+
+const GOAL_OPTIONS = [
+  { value: 'general_english', label: 'General English' },
+  { value: 'interview_prep', label: 'Interview Preparation' },
+  { value: 'tech_english', label: 'Tech English' },
+  { value: 'speaking', label: 'Speaking & Fluency' },
+  { value: 'writing', label: 'Writing' },
+  { value: 'grammar', label: 'Grammar' },
+];
 
 function validate(form) {
   const errors = {};
@@ -82,6 +94,11 @@ function RegisterPage() {
         password: form.password,
         userRole: form.userRole,
         sex: form.sex,
+        ...(form.userRole === 'student' ? {
+          learning_goal: form.learning_goal.trim(),
+          mainGoal: form.mainGoal,
+          onlineOnly: form.onlineOnly,
+        } : {}),
       });
       navigate('/login', { state: { registered: true } });
     } catch (err) {
@@ -202,6 +219,44 @@ function RegisterPage() {
               </select>
             </Field>
           </div>
+
+          {form.userRole === 'student' && (
+            <>
+              <Field label="What is your main learning goal?">
+                <select
+                  name="mainGoal"
+                  value={form.mainGoal}
+                  onChange={handleChange}
+                  style={{ ...inputStyle(false), cursor: 'pointer' }}
+                >
+                  {GOAL_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </Field>
+
+              <Field label="Tell us more about what you want to improve">
+                <textarea
+                  name="learning_goal"
+                  value={form.learning_goal}
+                  onChange={handleChange}
+                  style={{ ...inputStyle(false), resize: 'vertical', minHeight: '60px', fontFamily: 'inherit' }}
+                  placeholder="e.g. I want to improve my English for technical interviews and daily standups"
+                />
+              </Field>
+
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', color: '#334155' }}>
+                <input
+                  type="checkbox"
+                  name="onlineOnly"
+                  checked={form.onlineOnly}
+                  onChange={(e) => setForm((prev) => ({ ...prev, onlineOnly: e.target.checked }))}
+                  style={{ width: '16px', height: '16px' }}
+                />
+                I prefer online lessons only
+              </label>
+            </>
+          )}
 
           <button
             type="submit"

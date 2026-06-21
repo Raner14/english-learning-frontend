@@ -16,7 +16,6 @@ const MAIN_GOALS = [
 
 const INITIAL_FORM = {
   budget_max: '',
-  learning_goal: '',
   onboarding_text: '',
   currentLevel: 'Intermediate',
   availability: 'evenings',
@@ -36,6 +35,7 @@ function StarRating({ rank }) {
   );
 }
 
+/** Collects student preferences, sends them to the AI matching endpoint, and displays ranked teacher recommendations. */
 function MatchTeacherPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
@@ -60,9 +60,6 @@ function MatchTeacherPage() {
     if (!form.budget_max || Number(form.budget_max) <= 0) {
       errors.budget_max = 'Enter a budget greater than 0.';
     }
-    if (!form.learning_goal.trim()) {
-      errors.learning_goal = 'Describe what you want to learn.';
-    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   }
@@ -79,8 +76,8 @@ function MatchTeacherPage() {
       const [results, myRelations] = await Promise.all([
         savePreferences({
           budget_max: Number(form.budget_max),
-          learning_goal: form.learning_goal.trim(),
-          onboarding_text: form.onboarding_text.trim() || form.learning_goal.trim(),
+          learning_goal: form.onboarding_text.trim() || 'general english',
+          onboarding_text: form.onboarding_text.trim() || 'general english',
           currentLevel: form.currentLevel,
           availability: form.availability,
           mainGoal: form.mainGoal,
@@ -170,24 +167,6 @@ function MatchTeacherPage() {
           </div>
         </div>
 
-        <div className="match-form__field">
-          <label className="match-form__label" htmlFor="learning_goal">
-            Learning goal
-          </label>
-          <input
-            id="learning_goal"
-            name="learning_goal"
-            type="text"
-            placeholder="e.g. improve technical interview skills and grammar"
-            value={form.learning_goal}
-            onChange={handleChange}
-            className={`match-form__input${formErrors.learning_goal ? ' match-form__input--error' : ''}`}
-          />
-          {formErrors.learning_goal && (
-            <p className="match-form__error">{formErrors.learning_goal}</p>
-          )}
-        </div>
-
         <div className="match-form__row">
           <div className="match-form__field">
             <label className="match-form__label" htmlFor="mainGoal">
@@ -228,13 +207,13 @@ function MatchTeacherPage() {
 
         <div className="match-form__field">
           <label className="match-form__label" htmlFor="onboarding_text">
-            Tell us more <span className="match-form__optional">(optional)</span>
+            Describe the teacher you're looking for <span className="match-form__optional">(optional)</span>
           </label>
           <textarea
             id="onboarding_text"
             name="onboarding_text"
             rows={3}
-            placeholder="Any specific challenges or topics you'd like to work on?"
+            placeholder="e.g. I'm looking for a patient teacher who specializes in interview preparation and can help me practice speaking confidently"
             value={form.onboarding_text}
             onChange={handleChange}
             className="match-form__textarea"

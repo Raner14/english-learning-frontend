@@ -438,8 +438,7 @@ function UsersPage() {
                           type="button"
                           className="users-table__btn users-table__btn--delete"
                           onClick={() => setConfirmId(u.userID)}
-                          disabled={u.role === 'admin' || deletingId !== null || editingId !== null || showCreate}
-                          title={u.role === 'admin' ? 'Admin accounts cannot be deleted' : undefined}
+                          disabled={deletingId !== null || editingId !== null || showCreate || u.role === 'admin'}
                         >
                           Delete
                         </button>

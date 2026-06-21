@@ -11,7 +11,7 @@ const LEVEL_COLOR = {
   Advanced: 'level--advanced',
 };
 
-// 'idle' | 'active' | 'ended'
+/** Guides the student through an AI-powered chat to detect their English proficiency level (idle -> active -> ended). */
 function AssessmentPage() {
   const { user } = useAuth();
   const navigate = useNavigate();

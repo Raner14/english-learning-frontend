@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { getSettings, updateSettings } from '../../services/settingsService';
 import { getMyTeacherProfile, updateTeacher } from '../../services/teacherService';
+import { getPreferences, savePreferences } from '../../services/matchingService';
 import { deleteUser } from '../../services/userService';
 import { logout as logoutRequest } from '../../services/authService';
 import PageLoader from '../../components/common/PageLoader';
@@ -70,6 +71,7 @@ function SettingsPage() {
   const navigate = useNavigate();
   const toast = useToast();
   const isTeacher = user?.role === 'teacher';
+  const isStudent = user?.role === 'student';
   const isAdmin = user?.role === 'admin';
 
   const [pageLoading, setPageLoading] = useState(true);
@@ -80,6 +82,11 @@ function SettingsPage() {
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+
+  // Student learning preferences
+  const [prefsForm, setPrefsForm] = useState({ learning_goal: '', mainGoal: 'general_english' });
+  const [prefsSaving, setPrefsSaving] = useState(false);
+  const [prefsSaveError, setPrefsSaveError] = useState('');
 
   // Teacher profile
   const [teacherProfile, setTeacherProfile] = useState(null);
@@ -95,15 +102,22 @@ function SettingsPage() {
   useEffect(() => {
     const promises = [getSettings()];
     if (isTeacher) promises.push(getMyTeacherProfile());
+    if (isStudent) promises.push(getPreferences().catch(() => null));
 
     Promise.all(promises)
-      .then(([settingsData, teacherData]) => {
+      .then(([settingsData, extraData]) => {
         const theme = settingsData.theme === 'dark' ? 'dark' : 'light';
         setForm({ displayName: settingsData.displayName || '', email: settingsData.email || '', theme });
         applyTheme(theme);
-        if (teacherData) {
-          setTeacherProfile(teacherData);
-          setTeacherForm(profileToForm(teacherData));
+        if (isTeacher && extraData) {
+          setTeacherProfile(extraData);
+          setTeacherForm(profileToForm(extraData));
+        }
+        if (isStudent && extraData) {
+          setPrefsForm({
+            learning_goal: extraData.learning_goal || '',
+            mainGoal: extraData.mainGoal || 'general_english',
+          });
         }
       })
       .catch((err) => {
@@ -289,6 +303,73 @@ function SettingsPage() {
           </Button>
         </form>
       </Card>
+
+      {/* ── Learning Preferences (student role only) ── */}
+      {isStudent && (
+        <Card className="settings-card">
+          <h2 className="settings-card__heading">Learning Preferences</h2>
+          <p className="settings-card__description">
+            These preferences are used to recommend lessons and match you with teachers.
+          </p>
+
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            setPrefsSaving(true);
+            setPrefsSaveError('');
+            try {
+              await savePreferences({
+                budget_max: 100,
+                learning_goal: prefsForm.learning_goal.trim(),
+                onboarding_text: prefsForm.learning_goal.trim(),
+                currentLevel: 'Beginner',
+                mainGoal: prefsForm.mainGoal,
+              });
+              toast('Learning preferences saved.');
+            } catch (err) {
+              setPrefsSaveError(err?.response?.data?.error?.message || 'Failed to save preferences.');
+            } finally {
+              setPrefsSaving(false);
+            }
+          }} noValidate>
+            <div className="settings-field">
+              <label htmlFor="mainGoal" className="settings-label">Main Learning Goal</label>
+              <select
+                id="mainGoal"
+                className="settings-input"
+                value={prefsForm.mainGoal}
+                onChange={(e) => setPrefsForm(prev => ({ ...prev, mainGoal: e.target.value }))}
+              >
+                <option value="general_english">General English</option>
+                <option value="interview_prep">Interview Preparation</option>
+                <option value="tech_english">Tech English</option>
+                <option value="speaking">Speaking & Fluency</option>
+                <option value="writing">Writing</option>
+                <option value="grammar">Grammar</option>
+              </select>
+            </div>
+
+            <div className="settings-field">
+              <label htmlFor="learning_goal" className="settings-label">What do you want to improve?</label>
+              <textarea
+                id="learning_goal"
+                className="settings-input settings-textarea"
+                value={prefsForm.learning_goal}
+                onChange={(e) => setPrefsForm(prev => ({ ...prev, learning_goal: e.target.value }))}
+                rows={3}
+                placeholder="e.g. I want to improve my English for technical interviews and daily standups"
+              />
+            </div>
+
+            {prefsSaveError && (
+              <p className="settings-card__error" role="alert">{prefsSaveError}</p>
+            )}
+
+            <Button type="submit" isLoading={prefsSaving} disabled={prefsSaving}>
+              Save Preferences
+            </Button>
+          </form>
+        </Card>
+      )}
 
       {/* ── Teacher Profile (teacher role only) ───── */}
       {isTeacher && teacherProfile && (

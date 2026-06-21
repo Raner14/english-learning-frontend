@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useSocket } from '../../context/SocketContext';
 import { getConversation, addTeacherComment, replyToConversation } from '../../services/conversationService';
+import { getUser } from '../../services/userService';
+import { getMyRelations } from '../../services/relationsService';
 import PageLoader from '../../components/common/PageLoader';
 import './ConversationDetailPage.css';
 
@@ -26,10 +29,13 @@ function ThreadMessage({ reply, isOwnMessage }) {
   );
 }
 
+/** Displays a completed conversation with real-time reply thread, online status, teacher review form, and disconnect detection. */
 function ConversationDetailPage() {
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const { isUserOnline, socket } = useSocket();
 
   const [conversation, setConversation] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,18 +53,58 @@ function ConversationDetailPage() {
   const [replyText, setReplyText] = useState('');
   const [replySubmitting, setReplySubmitting] = useState(false);
   const [replyError, setReplyError] = useState('');
+  const [otherPartyName, setOtherPartyName] = useState('');
+  const [otherPartyId, setOtherPartyId] = useState(null);
+  const [disconnected, setDisconnected] = useState(false);
 
   const threadEndRef = useRef(null);
 
   useEffect(() => {
     getConversation(conversationId)
-      .then((data) => {
+      .then(async (data) => {
         setConversation(data);
         setReplies(data.replies || []);
+
+        // Resolve the other party's name for the online indicator
+        const isTeacherRole = user?.role === 'teacher';
+        if (isTeacherRole && data.studentId) {
+          setOtherPartyId(data.studentId);
+          try {
+            const studentData = await getUser(data.studentId);
+            setOtherPartyName(`${studentData.firstName} ${studentData.lastName}`);
+          } catch { setOtherPartyName(`Student #${data.studentId}`); }
+        } else if (data.teacherReviews?.[0]) {
+          setOtherPartyId(data.teacherReviews[0].userId);
+          setOtherPartyName(data.teacherReviews[0].teacherName || 'Teacher');
+
+          try {
+            const myRelations = await getMyRelations();
+            const reviewTeacherId = data.teacherReviews[0].teacherId;
+            const relation = myRelations.find((r) => String(r.teacherId) === String(reviewTeacherId));
+            if (!relation || relation.status !== 'active') {
+              setDisconnected(true);
+            }
+          } catch { /* keep disconnected false if check fails */ }
+        }
       })
       .catch((err) => setLoadError(err?.response?.data?.error?.message || 'Failed to load conversation.'))
       .finally(() => setLoading(false));
-  }, [conversationId]);
+  }, [conversationId, user?.role]);
+
+  // Listen for real-time replies from the other party via WebSocket
+  useEffect(() => {
+    if (!socket) return;
+    function handleNewReply(data) {
+      if (String(data.conversationId) === String(conversationId)) {
+        const senderRole = data.from === 'teacher' ? 'teacher' : 'student';
+        if (senderRole !== user.role) {
+          setReplies((prev) => [...prev, { role: senderRole, content: data.message }]);
+        }
+      }
+    }
+    socket.on('conversation:new-reply', handleNewReply);
+    return () => socket.off('conversation:new-reply', handleNewReply);
+  }, [socket, conversationId, user.role]);
 
   useEffect(() => {
     threadEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -139,6 +185,12 @@ function ConversationDetailPage() {
       </button>
 
       <div className="conv-detail__meta">
+        {otherPartyId && (
+          <span className="conv-detail__online-status">
+            <span className={`conv-detail__dot conv-detail__dot--${isUserOnline(otherPartyId) ? 'online' : 'offline'}`} />
+            {otherPartyName} — {isUserOnline(otherPartyId) ? 'Online' : 'Offline'}
+          </span>
+        )}
         {isTeacher ? (
           alreadyReviewed ? (
             <span className="conv-detail__status conv-detail__status--done">Reviewed by you</span>
@@ -282,24 +334,30 @@ function ConversationDetailPage() {
             <div ref={threadEndRef} />
           </div>
 
-          <form className="conv-thread__form" onSubmit={handleReply} noValidate>
-            <textarea
-              className="conv-thread__input"
-              rows={2}
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder="Write a reply…"
-              disabled={replySubmitting}
-            />
-            {replyError && <p className="conv-thread__error">{replyError}</p>}
-            <button
-              type="submit"
-              className="conv-thread__send-btn"
-              disabled={replySubmitting || !replyText.trim()}
-            >
-              {replySubmitting ? 'Sending…' : 'Send Reply'}
-            </button>
-          </form>
+          {disconnected ? (
+            <p className="conv-thread__disconnected">
+              You and {otherPartyName} are no longer connected. You can no longer send messages in this conversation.
+            </p>
+          ) : (
+            <form className="conv-thread__form" onSubmit={handleReply} noValidate>
+              <textarea
+                className="conv-thread__input"
+                rows={2}
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                placeholder="Write a reply…"
+                disabled={replySubmitting}
+              />
+              {replyError && <p className="conv-thread__error">{replyError}</p>}
+              <button
+                type="submit"
+                className="conv-thread__send-btn"
+                disabled={replySubmitting || !replyText.trim()}
+              >
+                {replySubmitting ? 'Sending…' : 'Send Reply'}
+              </button>
+            </form>
+          )}
         </div>
       )}
     </div>

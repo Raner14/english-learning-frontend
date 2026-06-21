@@ -20,6 +20,7 @@ function getStoredUser() {
   }
 }
 
+/** Reconciles inconsistent user field names (id/userId/userID, role/userRole) into a uniform shape. */
 function normalizeUser(userData, token) {
   if (!userData) {
     return null;
@@ -37,6 +38,7 @@ function normalizeUser(userData, token) {
   };
 }
 
+/** Manages auth state, syncs session to sessionStorage and API headers, and triggers logout on 401. */
 function AuthProvider({ children }) {
   const [user, setUser] = useState(() => normalizeUser(getStoredUser()));
 
@@ -57,6 +59,7 @@ function AuthProvider({ children }) {
         token: user.token,
         userId: user.id,
         userRole: user.role,
+        userName: [user.firstName, user.lastName].filter(Boolean).join(' ') || null,
       });
       return;
     }
