@@ -6,6 +6,7 @@ const ToastContext = createContext(null);
 
 let _nextId = 1;
 
+/** Provides a toast(message, type, link?) function and auto-dismisses notifications after 4 seconds. */
 export function ToastProvider({ children }) {
   const navigate = useNavigate();
   const [toasts, setToasts] = useState([]);

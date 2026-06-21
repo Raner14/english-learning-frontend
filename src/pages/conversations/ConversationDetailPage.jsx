@@ -29,6 +29,7 @@ function ThreadMessage({ reply, isOwnMessage }) {
   );
 }
 
+/** Displays a completed conversation with real-time reply thread, online status, teacher review form, and disconnect detection. */
 function ConversationDetailPage() {
   const { conversationId } = useParams();
   const navigate = useNavigate();

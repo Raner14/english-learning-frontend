@@ -6,6 +6,7 @@ import { getNotificationText, getNotificationLink } from '../utils/notificationH
 
 const SocketContext = createContext(null);
 
+/** Manages WebSocket connection, online user tracking, and real-time notifications. */
 function SocketProvider({ children }) {
   const { user } = useAuth();
   const toast = useToast();

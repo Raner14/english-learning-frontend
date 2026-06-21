@@ -7,6 +7,7 @@ const api = axios.create({
 let authSession = null;
 let unauthorizedHandler = null;
 
+/** Stores auth credentials so the request interceptor can attach them as headers. */
 function setAuthSession(session) {
 	if (!session) {
 		authSession = null;
@@ -25,6 +26,7 @@ function clearAuthSession() {
 	authSession = null;
 }
 
+/** Registers a callback invoked by the response interceptor on 401 (used for auto-logout). */
 function setUnauthorizedHandler(handler) {
 	unauthorizedHandler = typeof handler === 'function' ? handler : null;
 }

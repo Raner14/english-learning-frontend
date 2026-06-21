@@ -1,3 +1,4 @@
+/** Maps a Socket.IO event name to a human-readable toast message. */
 export function getNotificationText(event, data) {
   switch (event) {
     case 'conversation:new-reply':
@@ -17,6 +18,7 @@ export function getNotificationText(event, data) {
   }
 }
 
+/** Returns the in-app route to navigate to when a notification is clicked. */
 export function getNotificationLink(event, data) {
   switch (event) {
     case 'conversation:new-reply':

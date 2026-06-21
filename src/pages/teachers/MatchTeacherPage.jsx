@@ -35,6 +35,7 @@ function StarRating({ rank }) {
   );
 }
 
+/** Collects student preferences, sends them to the AI matching endpoint, and displays ranked teacher recommendations. */
 function MatchTeacherPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
