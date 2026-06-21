@@ -90,3 +90,11 @@
   font-size: 0.7rem;
   color: #9ca3af;
 }
+
+.notif-bell__item--clickable {
+  cursor: pointer;
+}
+
+.notif-bell__item--clickable:hover {
+  background: #f0f9ff;
+}

@@ -51,9 +51,9 @@ const REAL_PAGES = {
 
 function App() {
   return (
-    <ToastProvider>
+    <BrowserRouter>
+      <ToastProvider>
       <SocketProvider>
-      <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -83,9 +83,9 @@ function App() {
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
         </Routes>
-      </BrowserRouter>
       </SocketProvider>
-    </ToastProvider>
+      </ToastProvider>
+    </BrowserRouter>
   );
 }
 

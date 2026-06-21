@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ToastContainer from '../components/common/Toast';
 
 const ToastContext = createContext(null);
@@ -6,6 +7,7 @@ const ToastContext = createContext(null);
 let _nextId = 1;
 
 export function ToastProvider({ children }) {
+  const navigate = useNavigate();
   const [toasts, setToasts] = useState([]);
   const timers = useRef({});
 
@@ -16,9 +18,9 @@ export function ToastProvider({ children }) {
   }, []);
 
   const toast = useCallback(
-    (message, type = 'success') => {
+    (message, type = 'success', link = null) => {
       const id = _nextId++;
-      setToasts((prev) => [...prev.slice(-4), { id, message, type }]);
+      setToasts((prev) => [...prev.slice(-4), { id, message, type, link }]);
       timers.current[id] = setTimeout(() => dismiss(id), 4000);
     },
     [dismiss]
@@ -27,7 +29,7 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={toast}>
       {children}
-      <ToastContainer toasts={toasts} onDismiss={dismiss} />
+      <ToastContainer toasts={toasts} onDismiss={dismiss} onNavigate={navigate} />
     </ToastContext.Provider>
   );
 }

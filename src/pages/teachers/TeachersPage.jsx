@@ -32,7 +32,7 @@ function TeachersPage() {
           if (r.status === 'active') {
             statusMap[r.teacherId] = 'exists';
             relIdMap[r.teacherId] = r.relationId;
-          } else {
+          } else if (r.status === 'pending') {
             statusMap[r.teacherId] = 'success';
           }
         });

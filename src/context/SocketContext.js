@@ -1,11 +1,14 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
+import { useToast } from './ToastContext';
+import { getNotificationText, getNotificationLink } from '../utils/notificationHelpers';
 
 const SocketContext = createContext(null);
 
 function SocketProvider({ children }) {
   const { user } = useAuth();
+  const toast = useToast();
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState(new Set());
   const [notifications, setNotifications] = useState([]);
@@ -54,6 +57,7 @@ function SocketProvider({ children }) {
           { id: Date.now(), event, data, read: false, createdAt: new Date() },
           ...prev,
         ]);
+        toast(getNotificationText(event, data), 'info', getNotificationLink(event, data));
       });
     });
 

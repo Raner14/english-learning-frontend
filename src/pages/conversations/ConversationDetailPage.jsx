@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { getConversation, addTeacherComment, replyToConversation } from '../../services/conversationService';
 import { getUser } from '../../services/userService';
+import { getMyRelations } from '../../services/relationsService';
 import PageLoader from '../../components/common/PageLoader';
 import './ConversationDetailPage.css';
 
@@ -53,6 +54,7 @@ function ConversationDetailPage() {
   const [replyError, setReplyError] = useState('');
   const [otherPartyName, setOtherPartyName] = useState('');
   const [otherPartyId, setOtherPartyId] = useState(null);
+  const [disconnected, setDisconnected] = useState(false);
 
   const threadEndRef = useRef(null);
 
@@ -73,6 +75,15 @@ function ConversationDetailPage() {
         } else if (data.teacherReviews?.[0]) {
           setOtherPartyId(data.teacherReviews[0].userId);
           setOtherPartyName(data.teacherReviews[0].teacherName || 'Teacher');
+
+          try {
+            const myRelations = await getMyRelations();
+            const reviewTeacherId = data.teacherReviews[0].teacherId;
+            const relation = myRelations.find((r) => String(r.teacherId) === String(reviewTeacherId));
+            if (!relation || relation.status !== 'active') {
+              setDisconnected(true);
+            }
+          } catch { /* keep disconnected false if check fails */ }
         }
       })
       .catch((err) => setLoadError(err?.response?.data?.error?.message || 'Failed to load conversation.'))
@@ -322,24 +333,30 @@ function ConversationDetailPage() {
             <div ref={threadEndRef} />
           </div>
 
-          <form className="conv-thread__form" onSubmit={handleReply} noValidate>
-            <textarea
-              className="conv-thread__input"
-              rows={2}
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder="Write a reply…"
-              disabled={replySubmitting}
-            />
-            {replyError && <p className="conv-thread__error">{replyError}</p>}
-            <button
-              type="submit"
-              className="conv-thread__send-btn"
-              disabled={replySubmitting || !replyText.trim()}
-            >
-              {replySubmitting ? 'Sending…' : 'Send Reply'}
-            </button>
-          </form>
+          {disconnected ? (
+            <p className="conv-thread__disconnected">
+              You and {otherPartyName} are no longer connected. You can no longer send messages in this conversation.
+            </p>
+          ) : (
+            <form className="conv-thread__form" onSubmit={handleReply} noValidate>
+              <textarea
+                className="conv-thread__input"
+                rows={2}
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                placeholder="Write a reply…"
+                disabled={replySubmitting}
+              />
+              {replyError && <p className="conv-thread__error">{replyError}</p>}
+              <button
+                type="submit"
+                className="conv-thread__send-btn"
+                disabled={replySubmitting || !replyText.trim()}
+              >
+                {replySubmitting ? 'Sending…' : 'Send Reply'}
+              </button>
+            </form>
+          )}
         </div>
       )}
     </div>

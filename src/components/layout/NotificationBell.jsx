@@ -1,26 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../../context/SocketContext';
+import { getNotificationText, getNotificationLink } from '../../utils/notificationHelpers';
 import './NotificationBell.css';
 
-function getNotificationText(notification) {
-  const { event, data } = notification;
-  switch (event) {
-    case 'conversation:new-reply':
-      return `${data.senderName || 'Someone'} replied to your conversation`;
-    case 'conversation:completed':
-      return `${data.studentName || 'A student'} completed a conversation (Score: ${data.aiScore})`;
-    case 'conversation:reviewed':
-      return `${data.teacherName} reviewed your conversation on "${data.lessonTitle}" (Score: ${data.teacherScore})`;
-    case 'relation:accepted':
-      return `${data.teacherName} accepted your connection request!`;
-    case 'relation:requested':
-      return `${data.studentName} wants you to teach them!`;
-    default:
-      return 'New notification';
-  }
-}
-
 function NotificationBell() {
+  const navigate = useNavigate();
   const { notifications, unreadCount, clearNotifications } = useSocket();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -56,14 +41,21 @@ function NotificationBell() {
             <p className="notif-bell__empty">No notifications yet</p>
           ) : (
             <ul className="notif-bell__list">
-              {notifications.slice(0, 20).map((n) => (
-                <li key={n.id} className={`notif-bell__item${n.read ? '' : ' notif-bell__item--unread'}`}>
-                  <p className="notif-bell__text">{getNotificationText(n)}</p>
-                  <span className="notif-bell__time">
-                    {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </li>
-              ))}
+              {notifications.slice(0, 20).map((n) => {
+                const link = getNotificationLink(n.event, n.data);
+                return (
+                  <li
+                    key={n.id}
+                    className={`notif-bell__item${n.read ? '' : ' notif-bell__item--unread'}${link ? ' notif-bell__item--clickable' : ''}`}
+                    onClick={link ? () => { setOpen(false); navigate(link); } : undefined}
+                  >
+                    <p className="notif-bell__text">{getNotificationText(n.event, n.data)}</p>
+                    <span className="notif-bell__time">
+                      {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
