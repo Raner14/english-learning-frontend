@@ -10,6 +10,8 @@ export function getNotificationText(event, data) {
       return `${data.teacherName} accepted your connection request!`;
     case 'relation:requested':
       return `${data.studentName} wants you to teach them!`;
+    case 'relation:removed':
+      return `${data.studentName} has ended their connection with you`;
     default:
       return 'New notification';
   }
@@ -25,6 +27,8 @@ export function getNotificationLink(event, data) {
       return '/my-teachers';
     case 'relation:requested':
       return '/dashboard';
+    case 'relation:removed':
+      return '/students';
     default:
       return null;
   }

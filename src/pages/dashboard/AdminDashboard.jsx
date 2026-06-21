@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { getAllUsers } from '../../services/userService';
 import { getAllRelations } from '../../services/relationsService';
 import StatCard from '../../components/common/StatCard';
-import Card from '../../components/Card';
 import Loader from '../../components/common/Loader';
 
 function AdminDashboard() {
@@ -41,26 +39,6 @@ function AdminDashboard() {
         <StatCard title="Pending Requests" value={pendingCount} />
       </div>
 
-      <Card className="dashboard__highlight-card">
-        <p className="dashboard__section-label">Quick Actions</p>
-        <div className="dashboard__quick-links">
-          <Link to="/users" className="dashboard__quick-link">
-            Manage Users
-          </Link>
-          <Link to="/lessons" className="dashboard__quick-link">
-            Manage Lessons
-          </Link>
-          <Link to="/grammar" className="dashboard__quick-link">
-            Grammar Rules
-          </Link>
-          <Link to="/relations" className="dashboard__quick-link">
-            Manage Relations
-          </Link>
-          <Link to="/exercises" className="dashboard__quick-link">
-            Warm-Up Exercises
-          </Link>
-        </div>
-      </Card>
     </div>
   );
 }

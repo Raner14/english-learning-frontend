@@ -40,7 +40,7 @@ function UsersPage() {
 
   // Inline edit state
   const [editingId, setEditingId] = useState(null);
-  const [editForm, setEditForm] = useState({ firstName: '', lastName: '', userRole: '' });
+  const [editForm, setEditForm] = useState({ firstName: '', lastName: '' });
   const [savingId, setSavingId] = useState(null);
   const [saveError, setSaveError] = useState('');
 
@@ -116,7 +116,7 @@ function UsersPage() {
 
   function handleEditStart(u) {
     setEditingId(u.userID);
-    setEditForm({ firstName: u.firstName, lastName: u.lastName, userRole: u.role });
+    setEditForm({ firstName: u.firstName, lastName: u.lastName });
     setSaveError('');
     setConfirmId(null);
   }
@@ -142,12 +142,11 @@ function UsersPage() {
       await updateUser(userId, {
         firstName: editForm.firstName.trim(),
         lastName: editForm.lastName.trim(),
-        userRole: editForm.userRole,
       });
       setUsers((prev) =>
         prev.map((u) =>
           u.userID === userId
-            ? { ...u, firstName: editForm.firstName.trim(), lastName: editForm.lastName.trim(), role: editForm.userRole }
+            ? { ...u, firstName: editForm.firstName.trim(), lastName: editForm.lastName.trim() }
             : u
         )
       );
@@ -379,22 +378,9 @@ function UsersPage() {
                   <td className="users-table__email">{u.email}</td>
 
                   <td>
-                    {isEditing ? (
-                      <select
-                        name="userRole"
-                        className="users-table__edit-select"
-                        value={editForm.userRole}
-                        onChange={handleEditChange}
-                      >
-                        <option value="student">student</option>
-                        <option value="teacher">teacher</option>
-                        <option value="admin">admin</option>
-                      </select>
-                    ) : (
-                      <span className={`users-page__role ${ROLE_COLORS[u.role] || ''}`}>
-                        {u.role}
-                      </span>
-                    )}
+                    <span className={`users-page__role ${ROLE_COLORS[u.role] || ''}`}>
+                      {u.role}
+                    </span>
                   </td>
 
                   <td>{formatDate(u.createDate)}</td>
@@ -452,7 +438,7 @@ function UsersPage() {
                           type="button"
                           className="users-table__btn users-table__btn--delete"
                           onClick={() => setConfirmId(u.userID)}
-                          disabled={deletingId !== null || editingId !== null || showCreate}
+                          disabled={deletingId !== null || editingId !== null || showCreate || u.role === 'admin'}
                         >
                           Delete
                         </button>

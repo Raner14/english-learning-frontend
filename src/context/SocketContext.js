@@ -49,6 +49,7 @@ function SocketProvider({ children }) {
       'conversation:reviewed',
       'relation:accepted',
       'relation:requested',
+      'relation:removed',
     ];
 
     notificationEvents.forEach((event) => {
