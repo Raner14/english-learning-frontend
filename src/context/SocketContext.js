@@ -20,7 +20,8 @@ function SocketProvider({ children }) {
     }
 
     // Connect to the backend WebSocket server, sending userId for identification
-    const newSocket = io('http://localhost:3000', {
+    const socketUrl = process.env.REACT_APP_API_URL || window.location.origin;
+    const newSocket = io(socketUrl, {
       auth: { userId: user.id },
     });
 
