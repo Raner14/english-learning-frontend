@@ -29,6 +29,7 @@ function StudentDashboard() {
 
   if (loading) return <div className="dashboard__loader"><Loader /></div>;
   if (error) return <p className="dashboard__error">{error}</p>;
+  if (!stats) return <p className="dashboard__empty-text">No data available yet. Start a lesson to see your progress!</p>;
 
   const successRate =
     stats.completedLessonsCount > 0

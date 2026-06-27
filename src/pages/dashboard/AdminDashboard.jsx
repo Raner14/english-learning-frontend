@@ -24,6 +24,7 @@ function AdminDashboard() {
 
   if (loading) return <div className="dashboard__loader"><Loader /></div>;
   if (error) return <p className="dashboard__error">{error}</p>;
+  if (!users || users.length === 0) return <p className="dashboard__empty-text">No users found in the system.</p>;
 
   const studentCount = users.filter((u) => u.role === 'student').length;
   const teacherCount = users.filter((u) => u.role === 'teacher').length;

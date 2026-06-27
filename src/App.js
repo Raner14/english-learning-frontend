@@ -1,9 +1,10 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { SocketProvider } from './context/SocketContext';
 import PlaceholderView from './components/common/PlaceholderView';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import NotFoundPage from './pages/NotFoundPage';
 import LessonDetailPage from './pages/lessons/LessonDetailPage';
 import LessonVocabPage from './pages/lessons/LessonVocabPage';
 import AssessmentPage from './pages/assessment/AssessmentPage';
@@ -80,7 +81,7 @@ function App() {
             <Route path="/lessons/:lessonId/vocab" element={<LessonVocabPage />} />
             <Route path="/students/:studentId" element={<StudentProgressPage />} />
             <Route path="/conversations/:conversationId" element={<ConversationDetailPage />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </SocketProvider>
