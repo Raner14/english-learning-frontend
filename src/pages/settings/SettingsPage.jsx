@@ -163,6 +163,7 @@ function SettingsPage() {
         theme: form.theme,
       });
       applyTheme(form.theme);
+      window.dispatchEvent(new Event('settings-updated'));
       toast('Settings saved.');
     } catch (err) {
       setSaveError(err?.response?.data?.error?.message || 'Failed to save settings. Please try again.');

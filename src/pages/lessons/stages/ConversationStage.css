@@ -50,6 +50,12 @@
   color: var(--color-danger, #dc2626);
 }
 
+.conv-stage__input-error {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: var(--color-danger, #dc2626);
+}
+
 /* Two-column layout */
 .conv-stage__body {
   display: grid;
@@ -85,30 +91,31 @@
   padding: 4px 2px;
 }
 
-.conv-msg {
+.conv-chat__window .conv-msg {
   display: flex;
 }
 
-.conv-msg--user { justify-content: flex-end; }
-.conv-msg--ai   { justify-content: flex-start; }
+.conv-chat__window .conv-msg--user { justify-content: flex-end; }
+.conv-chat__window .conv-msg--ai   { justify-content: flex-start; }
 
-.conv-msg__bubble {
+.conv-chat__window .conv-msg__bubble {
   margin: 0;
   padding: 10px 14px;
   border-radius: 16px;
   max-width: 78%;
   font-size: 0.92rem;
   line-height: 1.55;
+  width: fit-content;
   word-break: break-word;
 }
 
-.conv-msg--user .conv-msg__bubble {
+.conv-chat__window .conv-msg--user .conv-msg__bubble {
   background: var(--color-primary, #0ea5e9);
   color: #fff;
   border-bottom-right-radius: 4px;
 }
 
-.conv-msg--ai .conv-msg__bubble {
+.conv-chat__window .conv-msg--ai .conv-msg__bubble {
   background: var(--color-bg-subtle, #f1f5f9);
   color: var(--color-text-primary, #0f172a);
   border-bottom-left-radius: 4px;

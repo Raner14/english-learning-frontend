@@ -12,6 +12,7 @@ function ConversationStage({ lesson, vocab, onEnd, onBack }) {
   const [ending, setEnding] = useState(false);
   const [starting, setStarting] = useState(true);
   const [error, setError] = useState('');
+  const [inputError, setInputError] = useState('');
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -40,8 +41,13 @@ function ConversationStage({ lesson, vocab, onEnd, onBack }) {
   async function handleSend(e) {
     e.preventDefault();
     const content = inputText.trim();
-    if (!content || sending || !conversationId) return;
+    if (!content) {
+      setInputError('Please type a message before sending.');
+      return;
+    }
+    if (sending || !conversationId) return;
 
+    setInputError('');
     setMessages((prev) => [...prev, { role: 'user', content }]);
     setInputText('');
     setSending(true);
@@ -121,18 +127,19 @@ function ConversationStage({ lesson, vocab, onEnd, onBack }) {
               className="conv-chat__input"
               placeholder="Type your message…"
               value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
+              onChange={(e) => { setInputText(e.target.value); setInputError(''); }}
               disabled={sending || !conversationId}
               autoFocus
             />
             <button
               type="submit"
               className="conv-chat__send-btn"
-              disabled={!inputText.trim() || sending || !conversationId}
+              disabled={sending || !conversationId}
             >
               Send
             </button>
           </form>
+          {inputError && <p className="conv-stage__input-error">{inputError}</p>}
 
           <button
             type="button"

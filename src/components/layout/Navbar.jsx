@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { getMe } from '../../services/userService';
+import { getSettings } from '../../services/settingsService';
 import { logout as logoutRequest } from '../../services/authService';
 import { getLinksByRole } from '../../config/roleNavigation';
 import NotificationBell from './NotificationBell';
@@ -19,14 +19,21 @@ function Navbar() {
   useEffect(() => {
     if (!user) return;
 
-    getMe()
-      .then((userData) => {
-        setDisplayName(`${userData.firstName} ${userData.lastName}`);
-      })
-      .catch(() => {
-        const role = user.role || 'User';
-        setDisplayName(role.charAt(0).toUpperCase() + role.slice(1));
-      });
+    function fetchDisplayName() {
+      getSettings()
+        .then((settings) => {
+          setDisplayName(settings.displayName || 'User');
+        })
+        .catch(() => {
+          const role = user.role || 'User';
+          setDisplayName(role.charAt(0).toUpperCase() + role.slice(1));
+        });
+    }
+
+    fetchDisplayName();
+
+    window.addEventListener('settings-updated', fetchDisplayName);
+    return () => window.removeEventListener('settings-updated', fetchDisplayName);
   }, [user]);
 
   // Close mobile menu on route change

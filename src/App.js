@@ -1,10 +1,12 @@
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { SocketProvider } from './context/SocketContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import PlaceholderView from './components/common/PlaceholderView';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ServerErrorPage from './pages/ServerErrorPage';
 import LessonDetailPage from './pages/lessons/LessonDetailPage';
 import LessonVocabPage from './pages/lessons/LessonVocabPage';
 import AssessmentPage from './pages/assessment/AssessmentPage';
@@ -52,12 +54,14 @@ const REAL_PAGES = {
 
 function App() {
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <ToastProvider>
       <SocketProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/server-error" element={<ServerErrorPage />} />
           <Route
             element={
               <ProtectedRoute>
@@ -87,6 +91,7 @@ function App() {
       </SocketProvider>
       </ToastProvider>
     </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
